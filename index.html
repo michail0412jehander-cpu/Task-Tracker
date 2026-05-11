@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Task Tracker</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--border:#2e2e2e;
+  --accent:#c8f542;--accent2:#8af0b4;--text:#f0f0f0;--muted:#666;
+  --danger:#e05555;--info:#64c8ff;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}
+.wrap{width:100%;max-width:960px;margin:0 auto;flex:1;display:flex;flex-direction:column;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+
+/* Header */
+.header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.logo{font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+.stats{display:flex;gap:16px}
+.stat{text-align:right}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;line-height:1;color:var(--accent)}
+.stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.progress-bar{height:3px;background:var(--surface2)}
+.progress-fill{height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s ease}
+
+/* Add area */
+.add-area{border-bottom:1px solid var(--border);flex-shrink:0}
+.add-row1{padding:12px 24px 6px;display:flex;gap:8px;flex-wrap:wrap}
+.add-row2{padding:0 24px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input[type=text]{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none}
+input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,245,66,.1)}
+input[type=text]::placeholder{color:var(--muted)}
+select,input[type=date],input[type=time]{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;cursor:pointer}
+select:focus,input[type=date]:focus,input[type=time]:focus{border-color:var(--accent)}
+input[type=date],input[type=time]{font-family:'JetBrains Mono',monospace;font-size:12px}
+.time-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.add-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:9px 18px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s;margin-left:auto}
+.add-btn:hover{opacity:.85}
+.add-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Layout */
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;flex-shrink:0;border-right:1px solid var(--border);padding:10px 0;overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.sb-item{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .12s;user-select:none}
+.sb-item:hover{color:var(--text);background:var(--surface)}
+.sb-item.active{color:var(--accent);background:var(--surface2)}
+.sb-item .cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.sb-item.active .cnt{color:var(--accent)}
+.sb-l1{font-weight:600;padding-left:14px}
+.sb-l2{font-size:11px;padding-left:28px}
+.sb-l3{font-size:11px;padding-left:40px}
+.sb-divider{height:1px;background:var(--border);margin:6px 12px}
+
+/* Pane */
+.pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.pane-header{padding:12px 20px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.pane-title{font-size:14px;font-weight:600}
+.pane-filters{display:flex;gap:4px}
+.fbtn{background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;color:var(--muted);font-family:'Syne',sans-serif;font-size:11px;cursor:pointer;transition:all .15s}
+.fbtn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.tasks{flex:1;overflow-y:auto}
+.tasks::-webkit-scrollbar{width:4px}.tasks::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Task */
+.task{display:flex;align-items:flex-start;gap:10px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .1s;animation:fadeIn .18s ease}
+.task:last-child{border-bottom:none}
+.task:hover{background:var(--surface)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.check:hover{border-color:var(--accent)}
+.check.done{background:var(--accent);border-color:var(--accent)}
+.check.done::after{content:'✓';font-size:10px;color:#000;font-weight:700}
+.task-body{flex:1;min-width:0}
+.task-text{font-size:13px;line-height:1.4;word-break:break-word}
+.task.is-done .task-text{color:#555;text-decoration:line-through}
+.task-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+.tag-target{background:rgba(200,245,66,.1);color:#c8f542}
+.tag-crm{background:rgba(138,240,180,.12);color:#8af0b4}
+.tag-analytics{background:rgba(150,150,255,.1);color:#a0a0ff}
+.tag-perf-other{background:rgba(200,245,66,.06);color:#888}
+.tag-site{background:rgba(100,200,255,.1);color:#64c8ff}
+.tag-mber-other{background:rgba(138,240,180,.07);color:#6a9980}
+.tag-personal{background:rgba(255,180,100,.1);color:#ffb464}
+.tag-work-other{background:rgba(160,160,160,.1);color:#888}
+.tag-performia{background:rgba(200,245,66,.08);color:#a8d430}
+.tag-mber{background:rgba(138,240,180,.08);color:#6abf94}
+.time-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--info);background:rgba(100,200,255,.08);padding:2px 7px;border-radius:4px}
+.date-badge{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.note-link{font-size:10px;color:var(--muted);cursor:pointer;transition:color .1s}
+.note-link:hover{color:var(--text)}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;opacity:0;transition:opacity .15s;flex-shrink:0;line-height:1;padding:0 2px}
+.task:hover .del-btn{opacity:1}
+.del-btn:hover{color:var(--danger)}
+.note-row{overflow:hidden;max-height:0;transition:max-height .2s}
+.note-row.open{max-height:80px}
+.note-inner{padding:0 20px 10px 48px}
+textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;resize:none;outline:none;height:46px}
+textarea:focus{border-color:#555;color:var(--text)}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* Status bar */
+.statusbar{padding:8px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
+.status-dot.ok{background:var(--accent2)}
+.status-dot.err{background:var(--danger)}
+.status-dot.loading{background:var(--accent);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.status-text{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex:1}
+.sync-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
+.sync-btn:hover{color:var(--text);border-color:#555}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div class="header">
+    <div class="logo">Task Tracker</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">всего</div></div>
+      <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">готово</div></div>
+    </div>
+  </div>
+
+  <div class="add-area">
+    <div class="add-row1">
+      <input type="text" id="inp" placeholder="Новая задача..." maxlength="200"/>
+      <select id="sel1" onchange="onSel1()">
+        <option value="work">Работа</option>
+        <option value="personal">Личное</option>
+      </select>
+      <select id="sel2" onchange="onSel2()">
+        <option value="performia">Перформия</option>
+        <option value="mber">MBer</option>
+        <option value="work-other">Прочее</option>
+      </select>
+      <select id="sel3">
+        <option value="target">Таргет</option>
+        <option value="crm">СРМ</option>
+        <option value="analytics">Аналитика</option>
+        <option value="perf-other">Прочее</option>
+      </select>
+    </div>
+    <div class="add-row2">
+      <div class="time-wrap">
+        <i class="ti ti-calendar" style="font-size:14px"></i>
+        <input type="date" id="task-date"/>
+        <i class="ti ti-clock" style="font-size:14px"></i>
+        <input type="time" id="time-from"/>
+        <span>—</span>
+        <input type="time" id="time-to"/>
+      </div>
+      <button class="add-btn" id="add-btn" onclick="addTask()">+ Добавить</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="pane">
+      <div class="pane-header">
+        <div class="pane-title" id="pane-title">Все задачи</div>
+        <div class="pane-filters">
+          <button class="fbtn active" onclick="setDF('all',this)">Все</button>
+          <button class="fbtn" onclick="setDF('active',this)">Активные</button>
+          <button class="fbtn" onclick="setDF('done',this)">Готово</button>
+        </div>
+      </div>
+      <div class="tasks" id="tasks-list"></div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div class="status-dot" id="sdot"></div>
+    <div class="status-text" id="stxt">подключение...</div>
+    <button class="sync-btn" onclick="loadAll()">↻ Синхронизировать</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyKQyD2W-5L3MKPJz-c6C7gtSUQTY2ZTJDDVJ3D6Z01dqTWnEW63iZNBREcBpYCckAb/exec';
+
+let tasks = [];
+let view = 'all';
+let doneFilter = 'all';
+let saving = false;
+
+const TREE = {
+  all:         { label: 'Все задачи',      parent: null,        icon: 'ti-layout-list' },
+  work:        { label: 'Работа',          parent: null,        icon: 'ti-briefcase' },
+  performia:   { label: 'Перформия',       parent: 'work',      icon: 'ti-trending-up' },
+  target:      { label: 'Таргет',          parent: 'performia', icon: 'ti-target' },
+  crm:         { label: 'СРМ',             parent: 'performia', icon: 'ti-address-book' },
+  analytics:   { label: 'Аналитика',       parent: 'performia', icon: 'ti-chart-bar' },
+  'perf-other':{ label: 'Прочее',          parent: 'performia', icon: 'ti-dots' },
+  mber:        { label: 'MBer',            parent: 'work',      icon: 'ti-users' },
+  site:        { label: 'Сайт',            parent: 'mber',      icon: 'ti-world' },
+  'mber-other':{ label: 'Прочее',          parent: 'mber',      icon: 'ti-dots' },
+  'work-other':{ label: 'Прочее (работа)', parent: 'work',      icon: 'ti-folder' },
+  personal:    { label: 'Личное',          parent: null,        icon: 'ti-home' }
+};
+
+const SEL3_OPTS = {
+  performia: [{v:'target',l:'Таргет'},{v:'crm',l:'СРМ'},{v:'analytics',l:'Аналитика'},{v:'perf-other',l:'Прочее'}],
+  mber:      [{v:'site',l:'Сайт'},{v:'mber-other',l:'Прочее'}],
+  'work-other': []
+};
+
+// ── API ──────────────────────────────────────────────
+function setStatus(state, msg) {
+  const dot = document.getElementById('sdot');
+  const txt = document.getElementById('stxt');
+  dot.className = 'status-dot ' + (state || '');
+  txt.textContent = msg;
+}
+
+async function apiGet(action) {
+  const r = await fetch(`${API}?action=${action}`);
+  return r.json();
+}
+
+async function apiPost(body) {
+  const r = await fetch(API, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
+async function loadAll() {
+  setStatus('loading', 'загрузка из Google Sheets...');
+  try {
+    const data = await apiGet('getAll');
+    tasks = (data.tasks || []).map(t => ({
+      ...t,
+      done: t.done === true || t.done === 'TRUE' || t.done === 'true'
+    }));
+    setStatus('ok', 'синхронизировано · ' + new Date().toLocaleTimeString('ru'));
+    refresh();
+  } catch(e) {
+    setStatus('err', 'ошибка подключения — ' + e.message);
+  }
+}
+
+async function saveAll() {
+  if (saving) return;
+  saving = true;
+  setStatus('loading', 'сохранение...');
+  try {
+    await apiPost({ action: 'saveAll', tasks });
+    setStatus('ok', 'сохранено · ' + new Date().toLocaleTimeString('ru'));
+  } catch(e) {
+    setStatus('err', 'ошибка сохранения');
+  }
+  saving = false;
+}
+
+// ── Selects ───────────────────────────────────────────
+function onSel1() {
+  const v = document.getElementById('sel1').value;
+  const s2 = document.getElementById('sel2');
+  const s3 = document.getElementById('sel3');
+  if (v === 'personal') { s2.style.display = 'none'; s3.style.display = 'none'; return; }
+  s2.style.display = '';
+  s2.innerHTML = [{v:'performia',l:'Перформия'},{v:'mber',l:'MBer'},{v:'work-other',l:'Прочее'}]
+    .map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+  onSel2();
+}
+function onSel2() {
+  const v = document.getElementById('sel2').value;
+  const s3 = document.getElementById('sel3');
+  const opts = SEL3_OPTS[v] || [];
+  if (!opts.length) { s3.style.display = 'none'; return; }
+  s3.style.display = '';
+  s3.innerHTML = opts.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+}
+function leafKey() {
+  const s1 = document.getElementById('sel1').value;
+  if (s1 === 'personal') return 'personal';
+  const s2 = document.getElementById('sel2').value;
+  const s3 = document.getElementById('sel3');
+  if (s3.style.display === 'none' || !s3.value) return s2;
+  return s3.value;
+}
+
+// ── Tasks ─────────────────────────────────────────────
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function fmtDate(d) {
+  if (!d) return '';
+  const [y, m, day] = String(d).slice(0,10).split('-');
+  return `${day}.${m}.${y}`;
+}
+
+async function addTask() {
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true;
+  const task = {
+    id: Date.now(),
+    text: txt,
+    leaf: leafKey(),
+    done: false,
+    note: '',
+    date: document.getElementById('task-date').value || todayStr(),
+    timeFrom: document.getElementById('time-from').value || '',
+    timeTo: document.getElementById('time-to').value || '',
+    createdAt: new Date().toISOString()
+  };
+  tasks.unshift(task);
+  inp.value = '';
+  document.getElementById('time-from').value = '';
+  document.getElementById('time-to').value = '';
+  refresh();
+  await saveAll();
+  btn.disabled = false;
+}
+
+async function toggleDone(id) {
+  const t = tasks.find(t => String(t.id) === String(id));
+  if (t) { t.done = !t.done; refresh(); await saveAll(); }
+}
+
+async function delTask(id) {
+  tasks = tasks.filter(t => String(t.id) !== String(id));
+  refresh();
+  await saveAll();
+}
+
+async function setNote(id, v) {
+  const t = tasks.find(t => String(t.id) === String(id));
+  if (t) { t.note = v; await saveAll(); }
+}
+
+function toggleNote(id) {
+  const el = document.getElementById('note-' + id);
+  if (el) {
+    el.classList.toggle('open');
+    if (el.classList.contains('open')) el.querySelector('textarea').focus();
+  }
+}
+
+// ── Render ────────────────────────────────────────────
+function underNode(leaf, node) {
+  if (node === 'all') return true;
+  if (leaf === node) return true;
+  let cur = TREE[leaf];
+  while (cur && cur.parent) {
+    if (cur.parent === node) return true;
+    cur = TREE[cur.parent];
+  }
+  return false;
+}
+function countNode(node) { return tasks.filter(t => underNode(t.leaf, node)).length; }
+
+function renderSidebar() {
+  const rows = [
+    {v:'all',cls:'sb-item'},
+    {div:true},
+    {v:'work',cls:'sb-item sb-l1'},
+    {v:'performia',cls:'sb-item sb-l2'},
+    {v:'target',cls:'sb-item sb-l3'},
+    {v:'crm',cls:'sb-item sb-l3'},
+    {v:'analytics',cls:'sb-item sb-l3'},
+    {v:'perf-other',cls:'sb-item sb-l3'},
+    {v:'mber',cls:'sb-item sb-l2'},
+    {v:'site',cls:'sb-item sb-l3'},
+    {v:'mber-other',cls:'sb-item sb-l3'},
+    {v:'work-other',cls:'sb-item sb-l2'},
+    {div:true},
+    {v:'personal',cls:'sb-item sb-l1'},
+  ];
+  document.getElementById('sidebar').innerHTML = rows.map(r => {
+    if (r.div) return '<div class="sb-divider"></div>';
+    const n = TREE[r.v], cnt = countNode(r.v);
+    return `<div class="${r.cls}${view === r.v ? ' active' : ''}" onclick="setView('${r.v}')">
+      <i class="ti ${n.icon}" style="font-size:13px"></i>${n.label}
+      <span class="cnt">${cnt || ''}</span>
+    </div>`;
+  }).join('');
+}
+
+function setView(v) {
+  view = v;
+  document.getElementById('pane-title').textContent = TREE[v].label;
+  renderSidebar();
+  renderTasks();
+}
+
+function setDF(f, btn) {
+  doneFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTasks();
+}
+
+function renderTasks() {
+  let vis = tasks.filter(t => underNode(t.leaf, view));
+  if (doneFilter === 'active') vis = vis.filter(t => !t.done);
+  else if (doneFilter === 'done') vis = vis.filter(t => t.done);
+
+  const el = document.getElementById('tasks-list');
+  if (!vis.length) {
+    el.innerHTML = '<div class="empty">Задач нет — добавьте первую!</div>';
+    return;
+  }
+  el.innerHTML = vis.map(t => {
+    const tl = TREE[t.leaf] ? TREE[t.leaf].label : '';
+    const timeBadge = (t.timeFrom || t.timeTo)
+      ? `<span class="time-badge"><i class="ti ti-clock" style="font-size:10px"></i>${t.timeFrom || ''}${t.timeTo ? ' — ' + t.timeTo : ''}</span>` : '';
+    const dateBadge = t.date ? `<span class="date-badge">${fmtDate(t.date)}</span>` : '';
+    return `<div class="task${t.done ? ' is-done' : ''}">
+      <div class="check${t.done ? ' done' : ''}" onclick="toggleDone(${t.id})"></div>
+      <div class="task-body">
+        <div class="task-text">${esc(t.text)}</div>
+        <div class="task-meta">
+          <span class="tag tag-${t.leaf}">${tl}</span>
+          ${dateBadge}${timeBadge}
+          <span class="note-link" onclick="toggleNote(${t.id})">${t.note ? '📝 заметка' : '+ заметка'}</span>
+        </div>
+      </div>
+      <button class="del-btn" onclick="delTask(${t.id})" title="Удалить">×</button>
+    </div>
+    <div class="note-row" id="note-${t.id}">
+      <div class="note-inner">
+        <textarea placeholder="Заметка..." onchange="setNote(${t.id},this.value)" onblur="setNote(${t.id},this.value)">${esc(t.note || '')}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function refresh() {
+  const total = tasks.length, done = tasks.filter(t => t.done).length;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('prog').style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+  renderSidebar();
+  renderTasks();
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Init ──────────────────────────────────────────────
+document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+document.getElementById('task-date').value = todayStr();
+onSel1();
+loadAll();
+</script>
+</body>
+</html>
