@@ -9,387 +9,434 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--border:#2e2e2e;
-  --accent:#c8f542;--accent2:#8af0b4;--text:#f0f0f0;--muted:#666;
-  --danger:#e05555;--info:#64c8ff;
+  --bg:#0f0f0f;--s1:#1a1a1a;--s2:#202020;--s3:#252525;
+  --border:#2a2a2a;--accent:#c8f542;--accent2:#8af0b4;
+  --text:#f0f0f0;--muted:#555;--muted2:#444;
+  --danger:#e05555;--info:#64c8ff;--warn:#f5a623;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
-body{display:flex;flex-direction:column;min-height:100vh}
-.wrap{width:100%;max-width:960px;margin:0 auto;flex:1;display:flex;flex-direction:column;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:14px}
+body{display:flex;flex-direction:column}
 
-/* Header */
-.header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
-.logo{font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
-.stats{display:flex;gap:16px}
+/* ── App shell ── */
+.app{display:flex;flex-direction:column;height:100vh;max-width:1100px;margin:0 auto;width:100%;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.prog-bar{height:2px;background:var(--s2);flex-shrink:0}
+.prog-fill{height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);flex:1}
+.hdr-stats{display:flex;gap:14px}
 .stat{text-align:right}
-.stat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;line-height:1;color:var(--accent)}
-.stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
-.progress-bar{height:3px;background:var(--surface2)}
-.progress-fill{height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s ease}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:var(--accent);line-height:1}
+.stat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
 
-/* Add area */
-.add-area{border-bottom:1px solid var(--border);flex-shrink:0}
-.add-row1{padding:12px 24px 6px;display:flex;gap:8px;flex-wrap:wrap}
-.add-row2{padding:0 24px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-input[type=text]{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none}
-input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,245,66,.1)}
-input[type=text]::placeholder{color:var(--muted)}
-select,input[type=date],input[type=time]{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;cursor:pointer}
-select:focus,input[type=date]:focus,input[type=time]:focus{border-color:var(--accent)}
-input[type=date],input[type=time]{font-family:'JetBrains Mono',monospace;font-size:12px}
-.time-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.add-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:9px 18px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s;margin-left:auto}
-.add-btn:hover{opacity:.85}
-.add-btn:disabled{opacity:.5;cursor:not-allowed}
+/* ── Layout ── */
+.body{display:flex;flex:1;overflow:hidden}
 
-/* Layout */
-.layout{display:flex;flex:1;overflow:hidden}
-.sidebar{width:200px;flex-shrink:0;border-right:1px solid var(--border);padding:10px 0;overflow-y:auto}
-.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--border)}
-.sb-item{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .12s;user-select:none}
-.sb-item:hover{color:var(--text);background:var(--surface)}
-.sb-item.active{color:var(--accent);background:var(--surface2)}
-.sb-item .cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
-.sb-item.active .cnt{color:var(--accent)}
-.sb-l1{font-weight:600;padding-left:14px}
-.sb-l2{font-size:11px;padding-left:28px}
-.sb-l3{font-size:11px;padding-left:40px}
-.sb-divider{height:1px;background:var(--border);margin:6px 12px}
+/* ── Sidebar ── */
+.sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 0}
+.sb-scroll::-webkit-scrollbar{width:3px}.sb-scroll::-webkit-scrollbar-thumb{background:var(--border)}
 
-/* Pane */
+.sb-node{user-select:none}
+.sb-row{display:flex;align-items:center;gap:0;cursor:pointer;transition:background .1s;border-radius:0;position:relative}
+.sb-row:hover{background:var(--s1)}
+.sb-row.active{background:var(--s2)}
+.sb-row.active .sb-label{color:var(--accent)}
+.sb-toggle{width:20px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);font-size:10px;transition:transform .15s}
+.sb-toggle.open{transform:rotate(90deg)}
+.sb-toggle.leaf{opacity:0;pointer-events:none}
+.sb-icon{font-size:13px;color:var(--muted);flex-shrink:0;width:18px;text-align:center}
+.sb-row.active .sb-icon{color:var(--accent)}
+.sb-label{flex:1;font-size:12px;color:var(--muted);padding:6px 4px 6px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.sb-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);padding-right:8px;flex-shrink:0}
+.sb-row.active .sb-cnt{color:var(--accent)}
+.sb-actions{display:none;align-items:center;gap:1px;padding-right:6px;flex-shrink:0}
+.sb-row:hover .sb-actions{display:flex}
+.sb-act-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 3px;border-radius:4px;line-height:1;transition:color .1s}
+.sb-act-btn:hover{color:var(--text)}
+.sb-act-btn.del:hover{color:var(--danger)}
+.sb-children{overflow:hidden}
+
+/* "Все задачи" special row */
+.sb-all{display:flex;align-items:center;gap:6px;padding:7px 10px 7px 14px;cursor:pointer;font-size:12px;color:var(--muted);transition:background .1s;border-bottom:1px solid var(--border);margin-bottom:4px}
+.sb-all:hover{background:var(--s1)}
+.sb-all.active{background:var(--s2);color:var(--accent)}
+.sb-all .sb-cnt{color:var(--muted2)}
+.sb-all.active .sb-cnt{color:var(--accent)}
+
+.sb-add-root{display:flex;align-items:center;gap:6px;padding:8px 14px;cursor:pointer;font-size:11px;color:var(--muted);border-top:1px solid var(--border);transition:color .1s;flex-shrink:0}
+.sb-add-root:hover{color:var(--accent)}
+
+/* ── Inline rename input ── */
+.sb-rename{flex:1;background:var(--s3);border:1px solid var(--accent);border-radius:4px;color:var(--text);font-size:12px;font-family:'Syne',sans-serif;padding:2px 6px;outline:none;min-width:0}
+
+/* ── Pane ── */
 .pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.pane-header{padding:12px 20px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;flex-shrink:0}
-.pane-title{font-size:14px;font-weight:600}
-.pane-filters{display:flex;gap:4px}
-.fbtn{background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;color:var(--muted);font-family:'Syne',sans-serif;font-size:11px;cursor:pointer;transition:all .15s}
+.pane-hdr{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.pane-title{font-size:14px;font-weight:600;flex:1}
+.pane-path{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.filter-btns{display:flex;gap:4px}
+.fbtn{background:none;border:1px solid var(--border);border-radius:20px;padding:3px 11px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
 .fbtn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+
+/* ── Add task form ── */
+.add-form{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.add-inp{flex:1;min-width:160px;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none}
+.add-inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,245,66,.08)}
+.add-inp::placeholder{color:var(--muted)}
+.add-cat-sel{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;font-family:'Syne',sans-serif;outline:none;cursor:pointer;max-width:160px}
+.add-cat-sel:focus{border-color:var(--accent)}
+.time-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+input[type=date],input[type=time]{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer}
+input[type=date]:focus,input[type=time]:focus{border-color:var(--accent)}
+.add-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 16px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s;margin-left:auto}
+.add-btn:hover{opacity:.85}
+.add-btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Subcategory adder in pane ── */
+.add-subcat{display:flex;align-items:center;gap:6px;padding:8px 20px;border-bottom:1px solid var(--border);cursor:pointer;font-size:11px;color:var(--muted);transition:color .15s;flex-shrink:0}
+.add-subcat:hover{color:var(--accent)}
+
+/* ── Task list ── */
 .tasks{flex:1;overflow-y:auto}
 .tasks::-webkit-scrollbar{width:4px}.tasks::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-/* Task */
-.task{display:flex;align-items:flex-start;gap:10px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .1s;animation:fadeIn .18s ease}
+.task{display:flex;align-items:flex-start;gap:10px;padding:11px 20px;border-bottom:1px solid var(--border);transition:background .1s;animation:fadeIn .15s ease}
 .task:last-child{border-bottom:none}
-.task:hover{background:var(--surface)}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task:hover{background:var(--s1)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.check{width:17px;height:17px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .check:hover{border-color:var(--accent)}
 .check.done{background:var(--accent);border-color:var(--accent)}
-.check.done::after{content:'✓';font-size:10px;color:#000;font-weight:700}
+.check.done::after{content:'✓';font-size:9px;color:#000;font-weight:700}
 .task-body{flex:1;min-width:0}
 .task-text{font-size:13px;line-height:1.4;word-break:break-word}
-.task.is-done .task-text{color:#555;text-decoration:line-through}
+.task.is-done .task-text{color:var(--muted);text-decoration:line-through}
 .task-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
-.tag{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
-.tag-target{background:rgba(200,245,66,.1);color:#c8f542}
-.tag-crm{background:rgba(138,240,180,.12);color:#8af0b4}
-.tag-analytics{background:rgba(150,150,255,.1);color:#a0a0ff}
-.tag-perf-other{background:rgba(200,245,66,.06);color:#888}
-.tag-site{background:rgba(100,200,255,.1);color:#64c8ff}
-.tag-mber-other{background:rgba(138,240,180,.07);color:#6a9980}
-.tag-personal{background:rgba(255,180,100,.1);color:#ffb464}
-.tag-work-other{background:rgba(160,160,160,.1);color:#888}
-.tag-performia{background:rgba(200,245,66,.08);color:#a8d430}
-.tag-mber{background:rgba(138,240,180,.08);color:#6abf94}
-.time-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--info);background:rgba(100,200,255,.08);padding:2px 7px;border-radius:4px}
-.date-badge{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.cat-pill{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:rgba(200,245,66,.08);color:#a0b830}
+.date-pill{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.time-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--info);background:rgba(100,200,255,.08);padding:2px 7px;border-radius:4px}
 .note-link{font-size:10px;color:var(--muted);cursor:pointer;transition:color .1s}
 .note-link:hover{color:var(--text)}
-.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;opacity:0;transition:opacity .15s;flex-shrink:0;line-height:1;padding:0 2px}
-.task:hover .del-btn{opacity:1}
-.del-btn:hover{color:var(--danger)}
-.note-row{overflow:hidden;max-height:0;transition:max-height .2s}
-.note-row.open{max-height:80px}
-.note-inner{padding:0 20px 10px 48px}
-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;resize:none;outline:none;height:46px}
-textarea:focus{border-color:#555;color:var(--text)}
-.empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
+.del-task{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;opacity:0;transition:opacity .15s;flex-shrink:0;line-height:1;padding:0 2px}
+.task:hover .del-task{opacity:1}
+.del-task:hover{color:var(--danger)}
+.note-wrap{overflow:hidden;max-height:0;transition:max-height .2s}
+.note-wrap.open{max-height:80px}
+.note-inner{padding:0 20px 10px 47px}
+textarea{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;resize:none;outline:none;height:44px}
+textarea:focus{border-color:var(--muted);color:var(--text)}
 
-/* Status bar */
-.statusbar{padding:8px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
-.status-dot.ok{background:var(--accent2)}
-.status-dot.err{background:var(--danger)}
-.status-dot.loading{background:var(--accent);animation:pulse 1s infinite}
+.empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
+
+/* ── Status bar ── */
+.statusbar{padding:7px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
+.sdot.ok{background:var(--accent2)}
+.sdot.err{background:var(--danger)}
+.sdot.loading{background:var(--accent);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.status-text{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex:1}
-.sync-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
-.sync-btn:hover{color:var(--text);border-color:#555}
+.stxt{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex:1}
+.sync-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
+.sync-btn:hover{color:var(--text);border-color:var(--muted)}
+
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn .15s}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;width:340px;display:flex;flex-direction:column;gap:12px}
+.modal-title{font-size:14px;font-weight:600}
+.modal input{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none;width:100%}
+.modal input:focus{border-color:var(--accent)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.mbtn{border:none;border-radius:8px;padding:8px 16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.mbtn.primary{background:var(--accent);color:#000}
+.mbtn.secondary{background:var(--s2);color:var(--text);border:1px solid var(--border)}
+.mbtn:hover{opacity:.85}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
-  <div class="header">
+<div class="app">
+  <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+  <div class="hdr">
     <div class="logo">Task Tracker</div>
-    <div class="stats">
+    <div class="hdr-stats">
       <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">всего</div></div>
       <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">готово</div></div>
     </div>
   </div>
 
-  <div class="add-area">
-    <div class="add-row1">
-      <input type="text" id="inp" placeholder="Новая задача..." maxlength="200"/>
-      <select id="sel1" onchange="onSel1()">
-        <option value="work">Работа</option>
-        <option value="personal">Личное</option>
-      </select>
-      <select id="sel2" onchange="onSel2()">
-        <option value="performia">Перформия</option>
-        <option value="mber">MBer</option>
-        <option value="work-other">Прочее</option>
-      </select>
-      <select id="sel3">
-        <option value="target">Таргет</option>
-        <option value="crm">СРМ</option>
-        <option value="analytics">Аналитика</option>
-        <option value="perf-other">Прочее</option>
-      </select>
-    </div>
-    <div class="add-row2">
-      <div class="time-wrap">
-        <i class="ti ti-calendar" style="font-size:14px"></i>
-        <input type="date" id="task-date"/>
-        <i class="ti ti-clock" style="font-size:14px"></i>
-        <input type="time" id="time-from"/>
-        <span>—</span>
-        <input type="time" id="time-to"/>
+  <div class="body">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sb-scroll" id="sb-scroll">
+        <div class="sb-all active" id="sb-all" onclick="selectCat(null)">
+          <i class="ti ti-layout-list" style="font-size:13px"></i>
+          <span style="flex:1;font-size:12px">Все задачи</span>
+          <span class="sb-cnt" id="sb-all-cnt"></span>
+        </div>
+        <div id="sb-tree"></div>
       </div>
-      <button class="add-btn" id="add-btn" onclick="addTask()">+ Добавить</button>
+      <div class="sb-add-root" onclick="promptAddCategory(null)">
+        <i class="ti ti-plus" style="font-size:12px"></i>
+        Новая категория
+      </div>
     </div>
-  </div>
 
-  <div class="layout">
-    <div class="sidebar" id="sidebar"></div>
+    <!-- Pane -->
     <div class="pane">
-      <div class="pane-header">
-        <div class="pane-title" id="pane-title">Все задачи</div>
-        <div class="pane-filters">
+      <div class="pane-hdr">
+        <div>
+          <div class="pane-title" id="pane-title">Все задачи</div>
+          <div class="pane-path" id="pane-path"></div>
+        </div>
+        <div class="filter-btns">
           <button class="fbtn active" onclick="setDF('all',this)">Все</button>
           <button class="fbtn" onclick="setDF('active',this)">Активные</button>
           <button class="fbtn" onclick="setDF('done',this)">Готово</button>
         </div>
       </div>
+
+      <div class="add-form">
+        <div class="add-row">
+          <input class="add-inp" id="add-inp" type="text" placeholder="Новая задача..." maxlength="300"/>
+          <select class="add-cat-sel" id="add-cat-sel"></select>
+        </div>
+        <div class="add-row">
+          <div class="time-row">
+            <i class="ti ti-calendar" style="font-size:13px"></i>
+            <input type="date" id="add-date"/>
+            <i class="ti ti-clock" style="font-size:13px"></i>
+            <input type="time" id="add-tf"/>
+            <span>—</span>
+            <input type="time" id="add-tt"/>
+          </div>
+          <button class="add-btn" id="add-btn" onclick="addTask()">+ Добавить</button>
+        </div>
+      </div>
+
+      <div class="add-subcat" id="add-subcat-row" onclick="promptAddCategory(selectedCatId)" style="display:none">
+        <i class="ti ti-folder-plus" style="font-size:12px"></i>
+        Добавить подкатегорию
+      </div>
+
       <div class="tasks" id="tasks-list"></div>
     </div>
   </div>
 
   <div class="statusbar">
-    <div class="status-dot" id="sdot"></div>
-    <div class="status-text" id="stxt">подключение...</div>
+    <div class="sdot" id="sdot"></div>
+    <div class="stxt" id="stxt">подключение...</div>
     <button class="sync-btn" onclick="loadAll()">↻ Синхронизировать</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal" style="display:none" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title" id="modal-title">Новая категория</div>
+    <input id="modal-inp" type="text" placeholder="Название..."/>
+    <div class="modal-btns">
+      <button class="mbtn secondary" onclick="closeModal()">Отмена</button>
+      <button class="mbtn primary" onclick="confirmModal()">Создать</button>
+    </div>
   </div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyKQyD2W-5L3MKPJz-c6C7gtSUQTY2ZTJDDVJ3D6Z01dqTWnEW63iZNBREcBpYCckAb/exec';
 
-let tasks = [];
-let view = 'all';
+let categories = []; // {id, name, parentId, order}
+let tasks = [];       // {id, text, categoryId, done, note, date, timeFrom, timeTo, priority}
+let selectedCatId = null; // null = all
 let doneFilter = 'all';
-let saving = false;
+let expandedNodes = new Set();
+let modalCallback = null;
 
-const TREE = {
-  all:         { label: 'Все задачи',      parent: null,        icon: 'ti-layout-list' },
-  work:        { label: 'Работа',          parent: null,        icon: 'ti-briefcase' },
-  performia:   { label: 'Перформия',       parent: 'work',      icon: 'ti-trending-up' },
-  target:      { label: 'Таргет',          parent: 'performia', icon: 'ti-target' },
-  crm:         { label: 'СРМ',             parent: 'performia', icon: 'ti-address-book' },
-  analytics:   { label: 'Аналитика',       parent: 'performia', icon: 'ti-chart-bar' },
-  'perf-other':{ label: 'Прочее',          parent: 'performia', icon: 'ti-dots' },
-  mber:        { label: 'MBer',            parent: 'work',      icon: 'ti-users' },
-  site:        { label: 'Сайт',            parent: 'mber',      icon: 'ti-world' },
-  'mber-other':{ label: 'Прочее',          parent: 'mber',      icon: 'ti-dots' },
-  'work-other':{ label: 'Прочее (работа)', parent: 'work',      icon: 'ti-folder' },
-  personal:    { label: 'Личное',          parent: null,        icon: 'ti-home' }
-};
-
-const SEL3_OPTS = {
-  performia: [{v:'target',l:'Таргет'},{v:'crm',l:'СРМ'},{v:'analytics',l:'Аналитика'},{v:'perf-other',l:'Прочее'}],
-  mber:      [{v:'site',l:'Сайт'},{v:'mber-other',l:'Прочее'}],
-  'work-other': []
-};
-
-// ── API ──────────────────────────────────────────────
+// ── Status ──────────────────────────────────────────────────
 function setStatus(state, msg) {
-  const dot = document.getElementById('sdot');
-  const txt = document.getElementById('stxt');
-  dot.className = 'status-dot ' + (state || '');
-  txt.textContent = msg;
+  document.getElementById('sdot').className = 'sdot ' + (state || '');
+  document.getElementById('stxt').textContent = msg;
 }
 
+// ── API ─────────────────────────────────────────────────────
 async function apiGet(action) {
   const r = await fetch(`${API}?action=${action}`);
   return r.json();
 }
-
 async function apiPost(body) {
-  const r = await fetch(API, {
-    method: 'POST',
-    body: JSON.stringify(body)
-  });
+  const r = await fetch(API, { method: 'POST', body: JSON.stringify(body) });
   return r.json();
 }
 
 async function loadAll() {
-  setStatus('loading', 'загрузка из Google Sheets...');
+  setStatus('loading', 'загрузка...');
   try {
     const data = await apiGet('getAll');
-    tasks = (data.tasks || []).map(t => ({
-      ...t,
-      done: t.done === true || t.done === 'TRUE' || t.done === 'true'
-    }));
+    categories = data.categories || [];
+    tasks = (data.tasks || []).map(t => ({ ...t, done: t.done === true || t.done === 'true' || t.done === 'TRUE' }));
+
+    // Если категорий нет — создаём дефолтные
+    if (!categories.length) await initDefaultCategories();
+
     setStatus('ok', 'синхронизировано · ' + new Date().toLocaleTimeString('ru'));
     refresh();
   } catch(e) {
-    setStatus('err', 'ошибка подключения — ' + e.message);
+    setStatus('err', 'ошибка: ' + e.message);
   }
 }
 
-async function saveAll() {
-  if (saving) return;
-  saving = true;
-  setStatus('loading', 'сохранение...');
-  try {
-    await apiPost({ action: 'saveAll', tasks });
-    setStatus('ok', 'сохранено · ' + new Date().toLocaleTimeString('ru'));
-  } catch(e) {
-    setStatus('err', 'ошибка сохранения');
-  }
-  saving = false;
-}
-
-// ── Selects ───────────────────────────────────────────
-function onSel1() {
-  const v = document.getElementById('sel1').value;
-  const s2 = document.getElementById('sel2');
-  const s3 = document.getElementById('sel3');
-  if (v === 'personal') { s2.style.display = 'none'; s3.style.display = 'none'; return; }
-  s2.style.display = '';
-  s2.innerHTML = [{v:'performia',l:'Перформия'},{v:'mber',l:'MBer'},{v:'work-other',l:'Прочее'}]
-    .map(o => `<option value="${o.v}">${o.l}</option>`).join('');
-  onSel2();
-}
-function onSel2() {
-  const v = document.getElementById('sel2').value;
-  const s3 = document.getElementById('sel3');
-  const opts = SEL3_OPTS[v] || [];
-  if (!opts.length) { s3.style.display = 'none'; return; }
-  s3.style.display = '';
-  s3.innerHTML = opts.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
-}
-function leafKey() {
-  const s1 = document.getElementById('sel1').value;
-  if (s1 === 'personal') return 'personal';
-  const s2 = document.getElementById('sel2').value;
-  const s3 = document.getElementById('sel3');
-  if (s3.style.display === 'none' || !s3.value) return s2;
-  return s3.value;
-}
-
-// ── Tasks ─────────────────────────────────────────────
-function todayStr() { return new Date().toISOString().slice(0, 10); }
-function fmtDate(d) {
-  if (!d) return '';
-  const [y, m, day] = String(d).slice(0,10).split('-');
-  return `${day}.${m}.${y}`;
-}
-
-async function addTask() {
-  const inp = document.getElementById('inp');
-  const txt = inp.value.trim();
-  if (!txt) return;
-  const btn = document.getElementById('add-btn');
-  btn.disabled = true;
-  const task = {
-    id: Date.now(),
-    text: txt,
-    leaf: leafKey(),
-    done: false,
-    note: '',
-    date: document.getElementById('task-date').value || todayStr(),
-    timeFrom: document.getElementById('time-from').value || '',
-    timeTo: document.getElementById('time-to').value || '',
-    createdAt: new Date().toISOString()
-  };
-  tasks.unshift(task);
-  inp.value = '';
-  document.getElementById('time-from').value = '';
-  document.getElementById('time-to').value = '';
-  refresh();
-  await saveAll();
-  btn.disabled = false;
-}
-
-async function toggleDone(id) {
-  const t = tasks.find(t => String(t.id) === String(id));
-  if (t) { t.done = !t.done; refresh(); await saveAll(); }
-}
-
-async function delTask(id) {
-  tasks = tasks.filter(t => String(t.id) !== String(id));
-  refresh();
-  await saveAll();
-}
-
-async function setNote(id, v) {
-  const t = tasks.find(t => String(t.id) === String(id));
-  if (t) { t.note = v; await saveAll(); }
-}
-
-function toggleNote(id) {
-  const el = document.getElementById('note-' + id);
-  if (el) {
-    el.classList.toggle('open');
-    if (el.classList.contains('open')) el.querySelector('textarea').focus();
-  }
-}
-
-// ── Render ────────────────────────────────────────────
-function underNode(leaf, node) {
-  if (node === 'all') return true;
-  if (leaf === node) return true;
-  let cur = TREE[leaf];
-  while (cur && cur.parent) {
-    if (cur.parent === node) return true;
-    cur = TREE[cur.parent];
-  }
-  return false;
-}
-function countNode(node) { return tasks.filter(t => underNode(t.leaf, node)).length; }
-
-function renderSidebar() {
-  const rows = [
-    {v:'all',cls:'sb-item'},
-    {div:true},
-    {v:'work',cls:'sb-item sb-l1'},
-    {v:'performia',cls:'sb-item sb-l2'},
-    {v:'target',cls:'sb-item sb-l3'},
-    {v:'crm',cls:'sb-item sb-l3'},
-    {v:'analytics',cls:'sb-item sb-l3'},
-    {v:'perf-other',cls:'sb-item sb-l3'},
-    {v:'mber',cls:'sb-item sb-l2'},
-    {v:'site',cls:'sb-item sb-l3'},
-    {v:'mber-other',cls:'sb-item sb-l3'},
-    {v:'work-other',cls:'sb-item sb-l2'},
-    {div:true},
-    {v:'personal',cls:'sb-item sb-l1'},
+async function initDefaultCategories() {
+  const defaults = [
+    { id: 'work', name: 'Работа', parentId: null },
+    { id: 'performia', name: 'Перформия', parentId: 'work' },
+    { id: 'target', name: 'Таргет', parentId: 'performia' },
+    { id: 'crm', name: 'СРМ', parentId: 'performia' },
+    { id: 'analytics', name: 'Аналитика', parentId: 'performia' },
+    { id: 'perf-other', name: 'Прочее', parentId: 'performia' },
+    { id: 'mber', name: 'MBer', parentId: 'work' },
+    { id: 'site', name: 'Сайт', parentId: 'mber' },
+    { id: 'mber-other', name: 'Прочее', parentId: 'mber' },
+    { id: 'work-other', name: 'Прочее', parentId: 'work' },
+    { id: 'personal', name: 'Личное', parentId: null },
   ];
-  document.getElementById('sidebar').innerHTML = rows.map(r => {
-    if (r.div) return '<div class="sb-divider"></div>';
-    const n = TREE[r.v], cnt = countNode(r.v);
-    return `<div class="${r.cls}${view === r.v ? ' active' : ''}" onclick="setView('${r.v}')">
-      <i class="ti ${n.icon}" style="font-size:13px"></i>${n.label}
-      <span class="cnt">${cnt || ''}</span>
+  await apiPost({ action: 'saveAll', categories: defaults.map((c,i) => ({ ...c, order: i, createdAt: new Date().toISOString() })), tasks: [] });
+  categories = defaults;
+}
+
+// ── Tree helpers ─────────────────────────────────────────────
+function children(parentId) {
+  return categories.filter(c => String(c.parentId || '') === String(parentId || ''));
+}
+function rootCategories() {
+  return categories.filter(c => !c.parentId || c.parentId === '');
+}
+function catById(id) {
+  return categories.find(c => String(c.id) === String(id));
+}
+function allDescendantIds(catId) {
+  const ids = new Set([String(catId)]);
+  const q = [String(catId)];
+  while (q.length) {
+    const cur = q.shift();
+    children(cur).forEach(c => { ids.add(String(c.id)); q.push(String(c.id)); });
+  }
+  return ids;
+}
+function taskCountFor(catId) {
+  if (!catId) return tasks.length;
+  const ids = allDescendantIds(catId);
+  return tasks.filter(t => ids.has(String(t.categoryId))).length;
+}
+function getPath(catId) {
+  const parts = [];
+  let cur = catById(catId);
+  while (cur) {
+    parts.unshift(cur.name);
+    cur = cur.parentId ? catById(cur.parentId) : null;
+  }
+  return parts.join(' › ');
+}
+
+// ── Sidebar render ───────────────────────────────────────────
+function renderSidebar() {
+  const allCnt = tasks.length;
+  const sbAll = document.getElementById('sb-all');
+  sbAll.classList.toggle('active', selectedCatId === null);
+  document.getElementById('sb-all-cnt').textContent = allCnt || '';
+  document.getElementById('sb-tree').innerHTML = renderNodes(null, 0);
+}
+
+function renderNodes(parentId, depth) {
+  return children(parentId).map(cat => renderNode(cat, depth)).join('');
+}
+
+function renderNode(cat, depth) {
+  const id = String(cat.id);
+  const hasChildren = children(id).length > 0;
+  const isOpen = expandedNodes.has(id);
+  const isActive = String(selectedCatId) === id;
+  const cnt = taskCountFor(id);
+  const indent = 14 + depth * 14;
+
+  return `<div class="sb-node">
+    <div class="sb-row${isActive ? ' active' : ''}" onclick="selectCat('${id}')">
+      <div style="width:${indent}px;flex-shrink:0"></div>
+      <span class="sb-toggle${hasChildren ? (isOpen ? ' open' : '') : ' leaf'}"
+        onclick="event.stopPropagation();toggleExpand('${id}')" aria-label="раскрыть">▶</span>
+      <i class="ti ${hasChildren ? 'ti-folder' : 'ti-point'} sb-icon"></i>
+      <span class="sb-label" id="sblabel-${id}">${esc(cat.name)}</span>
+      <span class="sb-cnt">${cnt || ''}</span>
+      <div class="sb-actions">
+        <button class="sb-act-btn" onclick="event.stopPropagation();startRename('${id}')" title="Переименовать"><i class="ti ti-pencil"></i></button>
+        <button class="sb-act-btn" onclick="event.stopPropagation();promptAddCategory('${id}')" title="Добавить подкатегорию"><i class="ti ti-folder-plus"></i></button>
+        <button class="sb-act-btn del" onclick="event.stopPropagation();confirmDeleteCat('${id}')" title="Удалить"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+    ${isOpen || isActive ? `<div class="sb-children">${renderNodes(id, depth + 1)}</div>` : ''}
+  </div>`;
+}
+
+function toggleExpand(id) {
+  if (expandedNodes.has(id)) expandedNodes.delete(id);
+  else expandedNodes.add(id);
+  renderSidebar();
+}
+
+function selectCat(id) {
+  selectedCatId = id;
+  if (id) expandedNodes.add(String(id));
+  renderSidebar();
+  renderPane();
+  updateCatSelect();
+}
+
+// ── Pane render ──────────────────────────────────────────────
+function renderPane() {
+  const catId = selectedCatId;
+  const cat = catId ? catById(catId) : null;
+  document.getElementById('pane-title').textContent = cat ? cat.name : 'Все задачи';
+  document.getElementById('pane-path').textContent = cat ? getPath(catId) : '';
+  document.getElementById('add-subcat-row').style.display = catId ? '' : 'none';
+  renderTasks();
+}
+
+function renderTasks() {
+  const catId = selectedCatId;
+  let ids = catId ? allDescendantIds(catId) : null;
+  let vis = ids ? tasks.filter(t => ids.has(String(t.categoryId))) : [...tasks];
+  if (doneFilter === 'active') vis = vis.filter(t => !t.done);
+  else if (doneFilter === 'done') vis = vis.filter(t => t.done);
+
+  const el = document.getElementById('tasks-list');
+  if (!vis.length) {
+    el.innerHTML = `<div class="empty">Задач нет<br><span style="font-size:11px;color:var(--muted2)">Добавьте первую задачу выше</span></div>`;
+    return;
+  }
+  el.innerHTML = vis.map(t => {
+    const cat = catById(t.categoryId);
+    const timeBadge = (t.timeFrom || t.timeTo)
+      ? `<span class="time-pill"><i class="ti ti-clock" style="font-size:9px"></i>${t.timeFrom||''}${t.timeTo?' — '+t.timeTo:''}</span>` : '';
+    const dateBadge = t.date ? `<span class="date-pill">${fmtDate(t.date)}</span>` : '';
+    const catBadge = cat ? `<span class="cat-pill">${esc(cat.name)}</span>` : '';
+    return `<div class="task${t.done?' is-done':''}">
+      <div class="check${t.done?' done':''}" onclick="toggleTask('${t.id}')"></div>
+      <div class="task-body">
+        <div class="task-text">${esc(t.text)}</div>
+        <div class="task-meta">
+          ${catBadge}${dateBadge}${timeBadge}
+          <span class="note-link" onclick="toggleNote('${t.id}')">${t.note?'📝':'+ заметка'}</span>
+        </div>
+      </div>
+      <button class="del-task" onclick="deleteTask('${t.id}')" title="Удалить">×</button>
+    </div>
+    <div class="note-wrap" id="note-${t.id}">
+      <div class="note-inner">
+        <textarea placeholder="Заметка..." onchange="saveNote('${t.id}',this.value)" onblur="saveNote('${t.id}',this.value)">${esc(t.note||'')}</textarea>
+      </div>
     </div>`;
   }).join('');
-}
-
-function setView(v) {
-  view = v;
-  document.getElementById('pane-title').textContent = TREE[v].label;
-  renderSidebar();
-  renderTasks();
 }
 
 function setDF(f, btn) {
@@ -399,58 +446,196 @@ function setDF(f, btn) {
   renderTasks();
 }
 
-function renderTasks() {
-  let vis = tasks.filter(t => underNode(t.leaf, view));
-  if (doneFilter === 'active') vis = vis.filter(t => !t.done);
-  else if (doneFilter === 'done') vis = vis.filter(t => t.done);
-
-  const el = document.getElementById('tasks-list');
-  if (!vis.length) {
-    el.innerHTML = '<div class="empty">Задач нет — добавьте первую!</div>';
-    return;
+// ── Category select in add form ──────────────────────────────
+function updateCatSelect() {
+  const sel = document.getElementById('add-cat-sel');
+  // Flat list with depth indicators
+  const opts = [];
+  function walk(parentId, depth) {
+    children(parentId).forEach(c => {
+      opts.push({ id: c.id, name: ('　'.repeat(depth)) + c.name });
+      walk(c.id, depth + 1);
+    });
   }
-  el.innerHTML = vis.map(t => {
-    const tl = TREE[t.leaf] ? TREE[t.leaf].label : '';
-    const timeBadge = (t.timeFrom || t.timeTo)
-      ? `<span class="time-badge"><i class="ti ti-clock" style="font-size:10px"></i>${t.timeFrom || ''}${t.timeTo ? ' — ' + t.timeTo : ''}</span>` : '';
-    const dateBadge = t.date ? `<span class="date-badge">${fmtDate(t.date)}</span>` : '';
-    return `<div class="task${t.done ? ' is-done' : ''}">
-      <div class="check${t.done ? ' done' : ''}" onclick="toggleDone(${t.id})"></div>
-      <div class="task-body">
-        <div class="task-text">${esc(t.text)}</div>
-        <div class="task-meta">
-          <span class="tag tag-${t.leaf}">${tl}</span>
-          ${dateBadge}${timeBadge}
-          <span class="note-link" onclick="toggleNote(${t.id})">${t.note ? '📝 заметка' : '+ заметка'}</span>
-        </div>
-      </div>
-      <button class="del-btn" onclick="delTask(${t.id})" title="Удалить">×</button>
-    </div>
-    <div class="note-row" id="note-${t.id}">
-      <div class="note-inner">
-        <textarea placeholder="Заметка..." onchange="setNote(${t.id},this.value)" onblur="setNote(${t.id},this.value)">${esc(t.note || '')}</textarea>
-      </div>
-    </div>`;
-  }).join('');
+  walk(null, 0);
+  sel.innerHTML = opts.map(o => `<option value="${o.id}"${String(o.id) === String(selectedCatId) ? ' selected' : ''}>${esc(o.name)}</option>`).join('');
 }
 
+// ── Add task ─────────────────────────────────────────────────
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function fmtDate(d) {
+  if (!d) return '';
+  const s = String(d).slice(0,10);
+  const [y,m,day] = s.split('-');
+  return `${day}.${m}.${y}`;
+}
+
+async function addTask() {
+  const inp = document.getElementById('add-inp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const catId = document.getElementById('add-cat-sel').value;
+  if (!catId) return alert('Выберите категорию');
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true;
+  const task = {
+    id: String(Date.now()),
+    text: txt,
+    categoryId: catId,
+    done: false,
+    note: '',
+    date: document.getElementById('add-date').value || todayStr(),
+    timeFrom: document.getElementById('add-tf').value || '',
+    timeTo: document.getElementById('add-tt').value || '',
+    priority: 'normal',
+    createdAt: new Date().toISOString()
+  };
+  tasks.unshift(task);
+  inp.value = '';
+  document.getElementById('add-tf').value = '';
+  document.getElementById('add-tt').value = '';
+  refresh();
+  setStatus('loading', 'сохранение...');
+  try {
+    await apiPost({ action: 'addTask', ...task });
+    setStatus('ok', 'сохранено · ' + new Date().toLocaleTimeString('ru'));
+  } catch(e) { setStatus('err', 'ошибка сохранения'); }
+  btn.disabled = false;
+}
+
+async function toggleTask(id) {
+  const t = tasks.find(t => String(t.id) === String(id));
+  if (!t) return;
+  t.done = !t.done;
+  refresh();
+  try {
+    await apiPost({ action: 'updateTask', ...t });
+    setStatus('ok', 'сохранено · ' + new Date().toLocaleTimeString('ru'));
+  } catch(e) { setStatus('err', 'ошибка'); }
+}
+
+async function deleteTask(id) {
+  tasks = tasks.filter(t => String(t.id) !== String(id));
+  refresh();
+  try {
+    await apiPost({ action: 'deleteTask', id });
+    setStatus('ok', 'удалено · ' + new Date().toLocaleTimeString('ru'));
+  } catch(e) { setStatus('err', 'ошибка'); }
+}
+
+function toggleNote(id) {
+  const el = document.getElementById('note-' + id);
+  if (el) { el.classList.toggle('open'); if (el.classList.contains('open')) el.querySelector('textarea').focus(); }
+}
+
+async function saveNote(id, val) {
+  const t = tasks.find(t => String(t.id) === String(id));
+  if (!t) return;
+  t.note = val;
+  try { await apiPost({ action: 'updateTask', ...t }); } catch(e) {}
+}
+
+// ── Category CRUD ────────────────────────────────────────────
+function promptAddCategory(parentId) {
+  openModal('Новая категория', 'Название категории...', 'Создать', async (name) => {
+    if (!name) return;
+    const id = String(Date.now());
+    const cat = { id, name, parentId: parentId || null, order: categories.length, createdAt: new Date().toISOString() };
+    categories.push(cat);
+    if (parentId) expandedNodes.add(String(parentId));
+    refresh();
+    try {
+      await apiPost({ action: 'addCategory', ...cat });
+      setStatus('ok', 'категория создана · ' + new Date().toLocaleTimeString('ru'));
+    } catch(e) { setStatus('err', 'ошибка'); }
+  });
+}
+
+function startRename(id) {
+  const label = document.getElementById('sblabel-' + id);
+  if (!label) return;
+  const cat = catById(id);
+  if (!cat) return;
+  const inp = document.createElement('input');
+  inp.className = 'sb-rename';
+  inp.value = cat.name;
+  label.replaceWith(inp);
+  inp.focus();
+  inp.select();
+  const commit = async () => {
+    const name = inp.value.trim() || cat.name;
+    cat.name = name;
+    renderSidebar();
+    try {
+      await apiPost({ action: 'renameCategory', id, name });
+      setStatus('ok', 'переименовано');
+    } catch(e) { setStatus('err', 'ошибка'); }
+  };
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); if (e.key === 'Escape') { inp.value = cat.name; inp.blur(); } });
+}
+
+async function confirmDeleteCat(id) {
+  const cat = catById(id);
+  if (!cat) return;
+  const hasChildren = children(id).length > 0;
+  const taskCount = taskCountFor(id);
+  const msg = `Удалить "${cat.name}"?${hasChildren ? '\n\nВсе подкатегории тоже будут удалены.' : ''}${taskCount ? `\n\n${taskCount} задач будут удалены.` : ''}`;
+  if (!confirm(msg)) return;
+
+  // Remove locally
+  const toDelete = allDescendantIds(id);
+  categories = categories.filter(c => !toDelete.has(String(c.id)));
+  tasks = tasks.filter(t => !toDelete.has(String(t.categoryId)));
+  if (String(selectedCatId) === String(id)) selectedCatId = null;
+  refresh();
+
+  try {
+    await apiPost({ action: 'deleteCategory', id });
+    setStatus('ok', 'удалено · ' + new Date().toLocaleTimeString('ru'));
+  } catch(e) { setStatus('err', 'ошибка'); }
+}
+
+// ── Modal ────────────────────────────────────────────────────
+function openModal(title, placeholder, btnText, callback) {
+  document.getElementById('modal-title').textContent = title;
+  const inp = document.getElementById('modal-inp');
+  inp.placeholder = placeholder;
+  inp.value = '';
+  document.querySelector('#modal .mbtn.primary').textContent = btnText;
+  modalCallback = callback;
+  document.getElementById('modal').style.display = 'flex';
+  setTimeout(() => inp.focus(), 50);
+}
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').style.display = 'none';
+  modalCallback = null;
+}
+function confirmModal() {
+  const val = document.getElementById('modal-inp').value.trim();
+  document.getElementById('modal').style.display = 'none';
+  if (modalCallback) modalCallback(val);
+  modalCallback = null;
+}
+document.getElementById('modal-inp').addEventListener('keydown', e => { if (e.key === 'Enter') confirmModal(); if (e.key === 'Escape') { document.getElementById('modal').style.display = 'none'; modalCallback = null; } });
+
+// ── Refresh ──────────────────────────────────────────────────
 function refresh() {
   const total = tasks.length, done = tasks.filter(t => t.done).length;
   document.getElementById('s-total').textContent = total;
   document.getElementById('s-done').textContent = done;
-  document.getElementById('prog').style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+  document.getElementById('prog').style.width = (total ? Math.round(done/total*100) : 0) + '%';
   renderSidebar();
-  renderTasks();
+  renderPane();
+  updateCatSelect();
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ── Init ──────────────────────────────────────────────
-document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-document.getElementById('task-date').value = todayStr();
-onSel1();
+// ── Init ─────────────────────────────────────────────────────
+document.getElementById('add-inp').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+document.getElementById('add-date').value = todayStr();
 loadAll();
 </script>
 </body>
