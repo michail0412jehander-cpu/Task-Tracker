@@ -9,142 +9,162 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0f0f;--s1:#181818;--s2:#202020;--s3:#272727;
-  --bd:#282828;--bd2:#333;
+  --bg:#0f0f0f;--s1:#1a1a1a;--s2:#202020;--s3:#272727;
+  --bd:#2a2a2a;--bd2:#333;
   --acc:#c8f542;--acc2:#8af0b4;
   --tx:#f0f0f0;--mu:#555;--mu2:#3a3a3a;
   --danger:#e05555;--info:#64c8ff;
 }
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;font-size:14px}
 body{display:flex;flex-direction:column}
-.app{display:flex;flex-direction:column;height:100vh;max-width:1140px;margin:0 auto;width:100%;border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
+.app{display:flex;flex-direction:column;height:100vh;max-width:1100px;margin:0 auto;width:100%;border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
 .prog{height:2px;background:var(--s2);flex-shrink:0}
 .prog-fill{height:2px;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .4s}
 
 /* Header */
-.hdr{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid var(--bd);gap:12px;flex-shrink:0}
+.hdr{display:flex;align-items:center;padding:14px 24px;border-bottom:1px solid var(--bd);gap:12px;flex-shrink:0}
 .logo{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);flex:1}
-.stats{display:flex;gap:14px}
-.stat-n{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:var(--acc);line-height:1}
-.stat-l{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;text-align:right}
+.stats{display:flex;gap:16px}
+.stat{text-align:right}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;color:var(--acc);line-height:1}
+.stat-l{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
 
 /* Body */
 .body{display:flex;flex:1;overflow:hidden}
 
-/* Sidebar */
-.sb{width:230px;flex-shrink:0;border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
-.sb-scroll{flex:1;overflow-y:auto;padding:6px 0}
+/* ── Sidebar ── */
+.sb{width:210px;flex-shrink:0;border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 0}
 .sb-scroll::-webkit-scrollbar{width:3px}.sb-scroll::-webkit-scrollbar-thumb{background:var(--bd)}
-.sb-all{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--mu);border-bottom:1px solid var(--bd);margin-bottom:4px;transition:background .1s}
+.sb-all{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--mu);border-bottom:1px solid var(--bd);margin-bottom:6px;transition:background .1s}
 .sb-all:hover,.sb-all.active{background:var(--s1)}
 .sb-all.active{color:var(--acc)}
-.sb-all-cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu)}
-.sb-all.active .sb-all-cnt{color:var(--acc)}
+.sb-all-cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px}
 
-/* Tree nodes */
 .sbn{user-select:none}
 .sbr{display:flex;align-items:center;cursor:pointer;transition:background .1s;position:relative}
 .sbr:hover{background:var(--s1)}
 .sbr.active{background:var(--s2)}
-.sbr.active .sbl{color:var(--acc)}
-.sbr.active .sb-icon{color:var(--acc)}
-.sb-arr{width:16px;height:28px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--mu);transition:transform .15s;flex-shrink:0}
+.sbr.active .sbl,.sbr.active .sb-icon{color:var(--acc)}
+.sb-arr{width:14px;height:26px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--mu);transition:transform .15s;flex-shrink:0}
 .sb-arr.open{transform:rotate(90deg)}
-.sb-arr.hidden{opacity:0;pointer-events:none}
-.sb-icon{font-size:12px;color:var(--mu);flex-shrink:0;width:16px;text-align:center}
-.sbl{flex:1;font-size:12px;color:var(--mu);padding:6px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.sb-nc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu2);padding-right:6px;flex-shrink:0}
+.sb-arr.leaf{opacity:0;pointer-events:none}
+.sb-icon{font-size:12px;color:var(--mu);flex-shrink:0;width:14px;text-align:center}
+.sbl{flex:1;font-size:12px;color:var(--mu);padding:5px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-nc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu2);padding-right:8px;flex-shrink:0}
 .sbr.active .sb-nc{color:var(--acc)}
-.sb-acts{display:none;align-items:center;padding-right:4px;gap:1px;flex-shrink:0}
-.sbr:hover .sb-acts{display:flex}
-.sbab{background:none;border:none;color:var(--mu);cursor:pointer;font-size:12px;padding:2px 3px;border-radius:3px;line-height:1;transition:color .1s}
-.sbab:hover{color:var(--tx)}
-.sbab.danger:hover{color:var(--danger)}
+.sb-hov{display:none;align-items:center;gap:1px;padding-right:4px;flex-shrink:0}
+.sbr:hover .sb-hov{display:flex}
+.sbhb{background:none;border:none;color:var(--mu);cursor:pointer;font-size:12px;padding:2px 3px;border-radius:3px;line-height:1}
+.sbhb:hover{color:var(--tx)}
+.sbhb.del:hover{color:var(--danger)}
 .sb-children{overflow:hidden}
-.sb-rename-inp{flex:1;background:var(--s3);border:1px solid var(--acc);border-radius:4px;color:var(--tx);font-size:12px;font-family:'Syne',sans-serif;padding:2px 6px;outline:none;min-width:0;margin:3px 2px}
 .sb-add-root{display:flex;align-items:center;gap:6px;padding:8px 14px;cursor:pointer;font-size:11px;color:var(--mu);border-top:1px solid var(--bd);transition:color .15s;flex-shrink:0}
 .sb-add-root:hover{color:var(--acc)}
 
-/* Pane */
+/* ── Pane ── */
 .pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.ph{padding:11px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
+
+/* Pane header */
+.ph{padding:13px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
 .ph-left{flex:1;min-width:0}
-.ph-title{font-size:14px;font-weight:600}
-.ph-path{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-title{font-size:15px;font-weight:600}
+.ph-path{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-top:2px}
 .fbtns{display:flex;gap:4px}
-.fb{background:none;border:1px solid var(--bd);border-radius:20px;padding:3px 11px;color:var(--mu);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
+.fb{background:none;border:1px solid var(--bd);border-radius:20px;padding:3px 12px;color:var(--mu);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
 .fb.active{background:var(--acc);color:#000;border-color:var(--acc);font-weight:600}
 
-/* Quick add */
-.qadd{padding:10px 20px;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap}
-.qadd-inp{flex:1;min-width:180px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:8px 14px;color:var(--tx);font-family:'Syne',sans-serif;font-size:13px;outline:none}
-.qadd-inp:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(200,245,66,.07)}
-.qadd-inp::placeholder{color:var(--mu)}
-.qadd-type{display:flex;gap:4px}
-.type-btn{background:none;border:1px solid var(--bd);border-radius:6px;padding:6px 12px;color:var(--mu);font-size:11px;font-family:'Syne',sans-serif;cursor:pointer;transition:all .15s}
-.type-btn.active{border-color:var(--acc);color:var(--acc)}
-.qadd-btn{background:var(--acc);color:#000;border:none;border-radius:8px;padding:8px 16px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
-.qadd-btn:hover{opacity:.85}
-.qadd-btn:disabled{opacity:.4;cursor:not-allowed}
+/* Add form — старый стиль */
+.add-form{padding:12px 24px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.add-inp{flex:1;min-width:160px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;color:var(--tx);font-family:'Syne',sans-serif;font-size:14px;outline:none}
+.add-inp:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(200,245,66,.07)}
+.add-inp::placeholder{color:var(--mu)}
 
-/* Tree in pane */
-.tree-pane{flex:1;overflow-y:auto;padding:4px 0}
-.tree-pane::-webkit-scrollbar{width:4px}.tree-pane::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
-.tn{animation:fadeIn .15s ease}
+/* Category tree select */
+.cat-select-wrap{position:relative}
+.cat-select-btn{display:flex;align-items:center;gap:6px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--tx);font-size:12px;cursor:pointer;white-space:nowrap;min-width:140px;max-width:200px;font-family:'Syne',sans-serif;transition:border-color .15s}
+.cat-select-btn:hover,.cat-select-btn.open{border-color:var(--acc)}
+.cat-select-btn i{margin-left:auto;font-size:11px;color:var(--mu)}
+.cat-select-btn .label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;background:var(--s2);border:1px solid var(--bd2);border-radius:10px;z-index:100;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);max-height:280px;overflow-y:auto}
+.cat-dropdown::-webkit-scrollbar{width:3px}.cat-dropdown::-webkit-scrollbar-thumb{background:var(--bd)}
+.cd-item{display:flex;align-items:center;gap:6px;padding:7px 14px;cursor:pointer;font-size:12px;color:var(--mu);transition:background .1s;white-space:nowrap}
+.cd-item:hover{background:var(--s3);color:var(--tx)}
+.cd-item.selected{color:var(--acc)}
+
+.time-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mu)}
+input[type=date],input[type=time]{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:7px 10px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer}
+input[type=date]:focus,input[type=time]:focus{border-color:var(--acc)}
+.add-btn{background:var(--acc);color:#000;border:none;border-radius:8px;padding:9px 18px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s;margin-left:auto}
+.add-btn:hover{opacity:.85}
+.add-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Task list */
+.tasks{flex:1;overflow-y:auto}
+.tasks::-webkit-scrollbar{width:4px}.tasks::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.empty{padding:48px 24px;text-align:center;color:var(--mu);font-size:13px;line-height:2}
+
+/* Task row */
+.task-group{animation:fadeIn .15s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
-/* Node row in pane */
-.nr{display:flex;align-items:flex-start;gap:8px;padding:9px 20px;border-bottom:1px solid var(--bd);transition:background .1s;position:relative}
-.nr:hover{background:var(--s1)}
-.nr-indent{flex-shrink:0}
-.nr-toggle{width:16px;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--mu);cursor:pointer;flex-shrink:0;margin-top:2px;transition:transform .15s}
-.nr-toggle.open{transform:rotate(90deg)}
-.nr-toggle.hidden{opacity:0;pointer-events:none}
-.nr-check{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd2);cursor:pointer;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.nr-check:hover{border-color:var(--acc)}
-.nr-check.done{background:var(--acc);border-color:var(--acc)}
-.nr-check.done::after{content:'✓';font-size:8px;color:#000;font-weight:700}
-.nr-folder{font-size:13px;color:var(--mu);flex-shrink:0;margin-top:2px}
-.nr-body{flex:1;min-width:0}
-.nr-name{font-size:13px;line-height:1.4;word-break:break-word;cursor:pointer}
-.nr-name:hover{color:var(--acc)}
-.nr.is-done .nr-name{color:var(--mu);text-decoration:line-through}
-.nr-meta{display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap}
-.nr-date{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace}
-.nr-time{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--info);background:rgba(100,200,255,.08);padding:2px 6px;border-radius:4px}
-.nr-note-link{font-size:10px;color:var(--mu);cursor:pointer;transition:color .1s}
-.nr-note-link:hover{color:var(--tx)}
-.nr-acts{display:none;align-items:center;gap:2px;margin-left:auto;flex-shrink:0}
-.nr:hover .nr-acts{display:flex}
-.nab{background:none;border:none;color:var(--mu);cursor:pointer;font-size:13px;padding:2px 3px;border-radius:4px;line-height:1;transition:color .1s}
-.nab:hover{color:var(--tx)}
-.nab.danger:hover{color:var(--danger)}
-.nr-note-wrap{overflow:hidden;max-height:0;transition:max-height .2s}
-.nr-note-wrap.open{max-height:100px}
-.nr-note-inner{padding:4px 20px 10px}
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:11px 24px;border-bottom:1px solid var(--bd);transition:background .1s;position:relative}
+.task-row:hover{background:var(--s1)}
+.task-indent{flex-shrink:0}
+.task-expand{width:14px;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--mu);cursor:pointer;flex-shrink:0;margin-top:2px;transition:transform .15s}
+.task-expand.open{transform:rotate(90deg)}
+.task-expand.hidden{opacity:0;pointer-events:none}
+.check{width:17px;height:17px;border-radius:50%;border:2px solid var(--bd2);cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.check:hover{border-color:var(--acc)}
+.check.done{background:var(--acc);border-color:var(--acc)}
+.check.done::after{content:'✓';font-size:9px;color:#000;font-weight:700}
+.task-body{flex:1;min-width:0}
+.task-text{font-size:13px;line-height:1.4;word-break:break-word;cursor:pointer}
+.task-text:hover{color:var(--acc)}
+.task-row.is-done .task-text{color:var(--mu);text-decoration:line-through}
+.task-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+.cat-pill{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:rgba(200,245,66,.08);color:#a0b830}
+.date-pill{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace}
+.time-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--info);background:rgba(100,200,255,.08);padding:2px 6px;border-radius:4px}
+.note-link{font-size:10px;color:var(--mu);cursor:pointer;transition:color .1s}
+.note-link:hover{color:var(--tx)}
+.subtask-cnt{font-size:10px;color:var(--mu);background:var(--s2);padding:2px 7px;border-radius:4px;cursor:pointer}
+.subtask-cnt:hover{color:var(--tx)}
+.task-acts{display:none;align-items:center;gap:2px;flex-shrink:0;margin-left:4px}
+.task-row:hover .task-acts{display:flex}
+.tab{background:none;border:none;color:var(--mu);cursor:pointer;font-size:13px;padding:2px 3px;border-radius:4px;line-height:1;transition:color .1s}
+.tab:hover{color:var(--tx)}
+.tab.danger:hover{color:var(--danger)}
+.tab.add-sub{color:var(--acc);opacity:.7}
+.tab.add-sub:hover{opacity:1}
+
+/* Note */
+.note-wrap{overflow:hidden;max-height:0;transition:max-height .2s}
+.note-wrap.open{max-height:100px}
+.note-inner{padding:0 24px 10px}
 textarea{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:7px 10px;color:var(--mu);font-size:11px;font-family:'JetBrains Mono',monospace;resize:none;outline:none;height:46px}
 textarea:focus{border-color:var(--bd2);color:var(--tx)}
-.empty-pane{padding:48px 20px;text-align:center;color:var(--mu);font-size:13px;line-height:2}
 
-/* Status */
-.sbar{padding:7px 20px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* Statusbar */
+.sbar{padding:7px 24px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
 .sdot{width:6px;height:6px;border-radius:50%;background:var(--mu);flex-shrink:0;transition:background .3s}
 .sdot.ok{background:var(--acc2)}.sdot.err{background:var(--danger)}
 .sdot.load{background:var(--acc);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .stxt{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;flex:1}
 .sync-btn{background:none;border:1px solid var(--bd);border-radius:6px;padding:3px 10px;color:var(--mu);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
-.sync-btn:hover{color:var(--tx);border-color:var(--bd2)}
+.sync-btn:hover{color:var(--tx)}
 
 /* Modal */
 .mover{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:200;animation:fadeIn .15s}
 .mdl{background:var(--s1);border:1px solid var(--bd2);border-radius:14px;padding:24px;width:420px;max-width:95vw;display:flex;flex-direction:column;gap:14px}
 .mdl-title{font-size:15px;font-weight:600}
-.mdl-row{display:flex;flex-direction:column;gap:5px}
-.mdl-label{font-size:11px;color:var(--mu)}
-.mdl input,.mdl select,.mdl textarea{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;color:var(--tx);font-family:'Syne',sans-serif;font-size:13px;outline:none;width:100%}
-.mdl input:focus,.mdl select:focus,.mdl textarea:focus{border-color:var(--acc)}
-.mdl textarea{height:72px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:12px}
+.mf{display:flex;flex-direction:column;gap:5px}
+.ml{font-size:11px;color:var(--mu)}
+.mdl input,.mdl textarea{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;color:var(--tx);font-family:'Syne',sans-serif;font-size:13px;outline:none;width:100%}
+.mdl input:focus,.mdl textarea:focus{border-color:var(--acc)}
+.mdl textarea{height:68px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:12px}
 .mdl-time{display:flex;align-items:center;gap:8px}
 .mdl-time input{flex:1}
 .mdl-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
@@ -152,6 +172,9 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
 .mdbtn.primary{background:var(--acc);color:#000}
 .mdbtn.secondary{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}
 .mdbtn:hover{opacity:.85}
+
+/* Inline rename in sidebar */
+.sb-rename{flex:1;background:var(--s3);border:1px solid var(--acc);border-radius:4px;color:var(--tx);font-size:12px;font-family:'Syne',sans-serif;padding:2px 6px;outline:none;margin:2px 2px}
 </style>
 </head>
 <body>
@@ -161,33 +184,29 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
   <div class="hdr">
     <div class="logo">Task Tracker</div>
     <div class="stats">
-      <div>
-        <div class="stat-n" id="s-total">0</div>
-        <div class="stat-l">всего задач</div>
-      </div>
-      <div>
-        <div class="stat-n" id="s-done">0</div>
-        <div class="stat-l">выполнено</div>
-      </div>
+      <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">всего</div></div>
+      <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">готово</div></div>
     </div>
   </div>
 
   <div class="body">
+    <!-- Sidebar -->
     <div class="sb">
       <div class="sb-scroll" id="sb-scroll">
-        <div class="sb-all active" id="sb-all" onclick="selectNode(null)">
+        <div class="sb-all active" id="sb-all" onclick="selectCat(null)">
           <i class="ti ti-layout-list" style="font-size:12px"></i>
           <span style="flex:1;font-size:12px;margin-left:6px">Все задачи</span>
           <span class="sb-all-cnt" id="sb-all-cnt"></span>
         </div>
         <div id="sb-tree"></div>
       </div>
-      <div class="sb-add-root" onclick="promptAdd(null,false)">
+      <div class="sb-add-root" onclick="openCatModal(null)">
         <i class="ti ti-plus" style="font-size:12px"></i>
         Новая категория
       </div>
     </div>
 
+    <!-- Pane -->
     <div class="pane">
       <div class="ph">
         <div class="ph-left">
@@ -201,16 +220,33 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
         </div>
       </div>
 
-      <div class="qadd">
-        <input class="qadd-inp" id="qadd-inp" type="text" placeholder="Быстрое добавление..." maxlength="300"/>
-        <div class="qadd-type">
-          <button class="type-btn" id="type-cat" onclick="setAddType('cat')">📁 Категория</button>
-          <button class="type-btn active" id="type-task" onclick="setAddType('task')">✓ Задача</button>
+      <!-- Add form -->
+      <div class="add-form">
+        <div class="add-row">
+          <input class="add-inp" id="add-inp" type="text" placeholder="Новая задача..." maxlength="300"/>
+          <!-- Category tree dropdown -->
+          <div class="cat-select-wrap" id="cat-wrap">
+            <div class="cat-select-btn" id="cat-btn" onclick="toggleCatDrop()">
+              <span class="label" id="cat-btn-label">Категория</span>
+              <i class="ti ti-chevron-down"></i>
+            </div>
+            <div class="cat-dropdown" id="cat-drop" style="display:none"></div>
+          </div>
+          <button class="add-btn" id="add-btn" onclick="addTask()">+ Добавить</button>
         </div>
-        <button class="qadd-btn" id="qadd-btn" onclick="quickAdd()">+ Добавить</button>
+        <div class="add-row">
+          <div class="time-row">
+            <i class="ti ti-calendar" style="font-size:13px"></i>
+            <input type="date" id="add-date"/>
+            <i class="ti ti-clock" style="font-size:13px"></i>
+            <input type="time" id="add-tf"/>
+            <span>—</span>
+            <input type="time" id="add-tt"/>
+          </div>
+        </div>
       </div>
 
-      <div class="tree-pane" id="tree-pane"></div>
+      <div class="tasks" id="tasks-list"></div>
     </div>
   </div>
 
@@ -221,35 +257,32 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Edit/Add Task Modal -->
 <div class="mover" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
   <div class="mdl">
-    <div class="mdl-title" id="mdl-title">Добавить</div>
-    <div class="mdl-row">
-      <div class="mdl-label">Название</div>
-      <input id="mdl-name" type="text" placeholder="Название..."/>
+    <div class="mdl-title" id="mdl-title">Задача</div>
+    <div class="mf"><div class="ml">Название</div><input id="mdl-name" type="text"/></div>
+    <div class="mf"><div class="ml">Дата</div><input id="mdl-date" type="date"/></div>
+    <div class="mf">
+      <div class="ml">Время</div>
+      <div class="mdl-time"><input id="mdl-tf" type="time"/><span style="color:var(--mu)">—</span><input id="mdl-tt" type="time"/></div>
     </div>
-    <div class="mdl-row" id="mdl-task-fields">
-      <div class="mdl-row">
-        <div class="mdl-label">Дата</div>
-        <input id="mdl-date" type="date"/>
-      </div>
-      <div class="mdl-row">
-        <div class="mdl-label">Время</div>
-        <div class="mdl-time">
-          <input id="mdl-tf" type="time"/>
-          <span style="color:var(--mu)">—</span>
-          <input id="mdl-tt" type="time"/>
-        </div>
-      </div>
-      <div class="mdl-row">
-        <div class="mdl-label">Заметка</div>
-        <textarea id="mdl-note" placeholder="Заметка..."></textarea>
-      </div>
-    </div>
+    <div class="mf"><div class="ml">Заметка</div><textarea id="mdl-note" placeholder="Заметка..."></textarea></div>
     <div class="mdl-btns">
       <button class="mdbtn secondary" onclick="closeModal()">Отмена</button>
-      <button class="mdbtn primary" id="mdl-ok" onclick="confirmModal()">Создать</button>
+      <button class="mdbtn primary" id="mdl-ok" onclick="confirmModal()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="mover" id="cat-modal" style="display:none" onclick="if(event.target===this)closeCatModal()">
+  <div class="mdl">
+    <div class="mdl-title" id="cat-mdl-title">Новая категория</div>
+    <div class="mf"><div class="ml">Название</div><input id="cat-mdl-name" type="text" placeholder="Название..."/></div>
+    <div class="mdl-btns">
+      <button class="mdbtn secondary" onclick="closeCatModal()">Отмена</button>
+      <button class="mdbtn primary" onclick="confirmCatModal()">Создать</button>
     </div>
   </div>
 </div>
@@ -257,413 +290,476 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyKQyD2W-5L3MKPJz-c6C7gtSUQTY2ZTJDDVJ3D6Z01dqTWnEW63iZNBREcBpYCckAb/exec';
 
-let nodes = [];          // all nodes (categories + tasks)
-let selectedId = null;   // null = show all tasks
+let nodes = [];
+let selectedCatId = null;   // currently selected category in sidebar
 let doneFilter = 'all';
 let expanded = new Set();
-let addType = 'task';    // 'cat' | 'task'
+let addCatId = null;        // selected category in add form
 let modalCb = null;
+let catModalCb = null;
+let expandedTasks = new Set(); // expanded subtask groups
+let catDropOpen = false;
 
 // ── Helpers ──────────────────────────────────────────────────
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const byId = id => nodes.find(n => String(n.id) === String(id));
-const children = pid => nodes.filter(n => String(n.parentId||'') === String(pid||''));
-const roots = () => nodes.filter(n => !n.parentId);
-const isTask = n => n && n.isTask;
+const childrenOf = pid => nodes.filter(n => String(n.parentId||'') === String(pid||''));
+const catNodes = () => nodes.filter(n => !n.isTask);
+const taskNodes = () => nodes.filter(n => n.isTask);
+const roots = () => nodes.filter(n => !n.parentId || n.parentId === '');
 const todayStr = () => new Date().toISOString().slice(0,10);
 const fmtDate = d => { if(!d)return''; const[y,m,day]=String(d).slice(0,10).split('-'); return`${day}.${m}.${y}`; };
 
 function allDescIds(id) {
   const set = new Set([String(id)]);
   const q = [String(id)];
-  while(q.length) {
-    const cur = q.shift();
-    children(cur).forEach(n => { set.add(String(n.id)); q.push(String(n.id)); });
-  }
+  while(q.length) { const c=q.shift(); childrenOf(c).forEach(n=>{set.add(String(n.id));q.push(String(n.id));}); }
   return set;
 }
 
 function getPath(id) {
-  const parts = [];
-  let cur = byId(id);
-  while(cur) { parts.unshift(cur.name); cur = cur.parentId ? byId(cur.parentId) : null; }
+  const parts=[];
+  let cur=byId(id);
+  while(cur){parts.unshift(cur.name);cur=cur.parentId?byId(cur.parentId):null;}
   return parts.join(' › ');
 }
 
-function taskCount(id) {
-  if(!id) return nodes.filter(n => n.isTask).length;
-  const ids = allDescIds(id);
-  return nodes.filter(n => n.isTask && ids.has(String(n.id))).length;
+function catTaskCount(catId) {
+  const ids = allDescIds(catId);
+  return taskNodes().filter(t => ids.has(String(t.id)) || ids.has(String(t.parentId))).length;
+}
+
+// Actually count tasks whose category ancestor matches
+function tasksInCat(catId) {
+  if(!catId) return taskNodes();
+  const ids = allDescIds(catId);
+  // task's categoryId must be in ids
+  return taskNodes().filter(t => ids.has(String(t.categoryId||t.parentId||'')));
+}
+
+// For sidebar count: count tasks whose categoryId is descendant of catId
+function catCount(catId) {
+  const ids = allDescIds(catId);
+  return taskNodes().filter(t => {
+    // walk up task's category chain
+    let cur = byId(t.parentId);
+    while(cur) { if(ids.has(String(cur.id)))return true; cur=cur.parentId?byId(cur.parentId):null; }
+    return ids.has(String(t.parentId));
+  }).length;
 }
 
 // ── Status ───────────────────────────────────────────────────
-function setStatus(state, msg) {
-  document.getElementById('sdot').className = 'sdot ' + state;
-  document.getElementById('stxt').textContent = msg;
+function setStatus(state,msg){
+  document.getElementById('sdot').className='sdot '+state;
+  document.getElementById('stxt').textContent=msg;
 }
 
 // ── API ──────────────────────────────────────────────────────
-async function apiGet(action) {
-  const r = await fetch(`${API}?action=${action}`);
-  return r.json();
-}
-async function apiPost(body) {
-  const r = await fetch(API, { method:'POST', body:JSON.stringify(body) });
-  return r.json();
-}
+async function apiGet(action){ const r=await fetch(`${API}?action=${action}`); return r.json(); }
+async function apiPost(body){ const r=await fetch(API,{method:'POST',body:JSON.stringify(body)}); return r.json(); }
 
-async function loadAll() {
-  setStatus('load', 'загрузка...');
-  try {
+async function loadAll(){
+  setStatus('load','загрузка...');
+  try{
     const data = await apiGet('getAll');
-    nodes = (data.nodes || []).map(n => ({
+    nodes = (data.nodes||[]).map(n=>({
       ...n,
-      isTask: n.isTask === true || n.isTask === 'true' || n.isTask === 'TRUE',
-      done:   n.done   === true || n.done   === 'true' || n.done   === 'TRUE'
+      isTask: n.isTask===true||n.isTask==='true'||n.isTask==='TRUE',
+      done:   n.done===true  ||n.done==='true'  ||n.done==='TRUE'
     }));
-    if (!nodes.length) await initDefaults();
-    setStatus('ok', 'синхронизировано · ' + new Date().toLocaleTimeString('ru'));
+    if(!nodes.length) await initDefaults();
+    setStatus('ok','синхронизировано · '+new Date().toLocaleTimeString('ru'));
     refresh();
-  } catch(e) { setStatus('err', 'ошибка: ' + e.message); }
+  }catch(e){setStatus('err','ошибка: '+e.message);}
 }
 
-async function initDefaults() {
-  const defs = [
-    {id:'work',      parentId:null,       name:'Работа',      isTask:false},
-    {id:'performia', parentId:'work',     name:'Перформия',   isTask:false},
-    {id:'target',    parentId:'performia',name:'Таргет',      isTask:false},
-    {id:'crm',       parentId:'performia',name:'СРМ',         isTask:false},
-    {id:'analytics', parentId:'performia',name:'Аналитика',   isTask:false},
-    {id:'perf-other',parentId:'performia',name:'Прочее',      isTask:false},
-    {id:'mber',      parentId:'work',     name:'MBer',        isTask:false},
-    {id:'site',      parentId:'mber',     name:'Сайт',        isTask:false},
-    {id:'mber-other',parentId:'mber',     name:'Прочее',      isTask:false},
-    {id:'work-other',parentId:'work',     name:'Прочее',      isTask:false},
-    {id:'personal',  parentId:null,       name:'Личное',      isTask:false},
-  ].map((n,i) => ({...n, done:false, note:'', date:'', timeFrom:'', timeTo:'', priority:'normal', order:i, createdAt:new Date().toISOString()}));
-  await apiPost({ action:'saveAll', nodes: defs });
-  nodes = defs;
+async function initDefaults(){
+  const defs=[
+    {id:'work',      parentId:null,        name:'Работа',    isTask:false},
+    {id:'performia', parentId:'work',      name:'Перформия', isTask:false},
+    {id:'target',    parentId:'performia', name:'Таргет',    isTask:false},
+    {id:'crm',       parentId:'performia', name:'СРМ',       isTask:false},
+    {id:'analytics', parentId:'performia', name:'Аналитика', isTask:false},
+    {id:'perf-other',parentId:'performia', name:'Прочее',    isTask:false},
+    {id:'mber',      parentId:'work',      name:'MBer',      isTask:false},
+    {id:'site',      parentId:'mber',      name:'Сайт',      isTask:false},
+    {id:'mber-other',parentId:'mber',      name:'Прочее',    isTask:false},
+    {id:'work-other',parentId:'work',      name:'Прочее',    isTask:false},
+    {id:'personal',  parentId:null,        name:'Личное',    isTask:false},
+  ].map((n,i)=>({...n,done:false,note:'',date:'',timeFrom:'',timeTo:'',priority:'normal',order:i,createdAt:new Date().toISOString(),categoryId:null}));
+  await apiPost({action:'saveAll',nodes:defs});
+  nodes=defs;
 }
 
 // ── Sidebar ──────────────────────────────────────────────────
-function renderSidebar() {
-  const cnt = taskCount(null);
-  document.getElementById('sb-all').className = 'sb-all' + (selectedId===null?' active':'');
-  document.getElementById('sb-all-cnt').textContent = cnt || '';
-  document.getElementById('sb-tree').innerHTML = roots().map(n => renderSbNode(n, 0)).join('');
+function renderSidebar(){
+  const allCnt = taskNodes().length;
+  document.getElementById('sb-all').className='sb-all'+(selectedCatId===null?' active':'');
+  document.getElementById('sb-all-cnt').textContent=allCnt||'';
+  document.getElementById('sb-tree').innerHTML=catNodes().filter(n=>!n.parentId||n.parentId==='').map(n=>renderSbNode(n,0)).join('');
 }
 
-function renderSbNode(n, depth) {
-  const id = String(n.id);
-  const ch = children(id);
-  const isOpen = expanded.has(id);
-  const isActive = String(selectedId) === id;
-  const cnt = taskCount(id);
-  const pad = 10 + depth * 14;
-
+function renderSbNode(n,depth){
+  const id=String(n.id);
+  const ch=catNodes().filter(c=>String(c.parentId)===id);
+  const isOpen=expanded.has(id);
+  const isActive=String(selectedCatId)===id;
+  const cnt=taskNodes().filter(t=>{ const ids=allDescIds(id); return ids.has(String(t.parentId)); }).length;
+  const pad=10+depth*14;
   return `<div class="sbn">
-    <div class="sbr${isActive?' active':''}" onclick="selectNode('${id}')">
+    <div class="sbr${isActive?' active':''}" onclick="selectCat('${id}')">
       <div style="width:${pad}px;flex-shrink:0"></div>
-      <span class="sb-arr${ch.length?(isOpen?' open':''):' hidden'}" onclick="event.stopPropagation();toggleExp('${id}')">▶</span>
-      <i class="ti ${n.isTask?'ti-checkbox':'ti-folder'} sb-icon"></i>
+      <span class="sb-arr${ch.length?(isOpen?' open':''):' leaf'}" onclick="event.stopPropagation();toggleSbExp('${id}')">▶</span>
+      <i class="ti ti-folder sb-icon"></i>
       <span class="sbl" id="sbl-${id}">${esc(n.name)}</span>
       <span class="sb-nc">${cnt||''}</span>
-      <div class="sb-acts">
-        <button class="sbab" onclick="event.stopPropagation();openEditModal('${id}')" title="Редактировать"><i class="ti ti-pencil"></i></button>
-        <button class="sbab" onclick="event.stopPropagation();promptAdd('${id}',false)" title="Добавить подкатегорию"><i class="ti ti-folder-plus"></i></button>
-        <button class="sbab" onclick="event.stopPropagation();promptAdd('${id}',true)" title="Добавить задачу"><i class="ti ti-plus"></i></button>
-        <button class="sbab danger" onclick="event.stopPropagation();confirmDelete('${id}')" title="Удалить"><i class="ti ti-trash"></i></button>
+      <div class="sb-hov">
+        <button class="sbhb" onclick="event.stopPropagation();startRename('${id}')" title="Переименовать"><i class="ti ti-pencil"></i></button>
+        <button class="sbhb" onclick="event.stopPropagation();openCatModal('${id}')" title="Добавить подкатегорию"><i class="ti ti-folder-plus"></i></button>
+        <button class="sbhb del" onclick="event.stopPropagation();deleteCat('${id}')" title="Удалить"><i class="ti ti-trash"></i></button>
       </div>
     </div>
-    ${isOpen || isActive ? `<div class="sb-children">${ch.map(c=>renderSbNode(c,depth+1)).join('')}</div>` : ''}
+    ${isOpen||isActive?`<div class="sb-children">${ch.map(c=>renderSbNode(c,depth+1)).join('')}</div>`:''}
   </div>`;
 }
 
-function toggleExp(id) {
-  expanded.has(id) ? expanded.delete(id) : expanded.add(id);
-  renderSidebar();
-}
+function toggleSbExp(id){ expanded.has(id)?expanded.delete(id):expanded.add(id); renderSidebar(); }
 
-function selectNode(id) {
-  selectedId = id;
+function selectCat(id){
+  selectedCatId=id;
   if(id) expanded.add(String(id));
+  // auto-set add form category
+  if(id && !addCatId) setAddCat(id);
   renderSidebar();
   renderPane();
+  buildCatDrop();
 }
+
+function startRename(id){
+  const label=document.getElementById('sbl-'+id);
+  if(!label)return;
+  const n=byId(id); if(!n)return;
+  const inp=document.createElement('input');
+  inp.className='sb-rename'; inp.value=n.name;
+  label.replaceWith(inp); inp.focus(); inp.select();
+  const commit=async()=>{
+    const name=inp.value.trim()||n.name;
+    n.name=name; renderSidebar();
+    try{await apiPost({action:'updateNode',...n});setStatus('ok','переименовано');}catch(e){setStatus('err','ошибка');}
+  };
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=n.name;inp.blur();}});
+}
+
+// ── Category dropdown in add form ────────────────────────────
+function buildCatDrop(){
+  const drop=document.getElementById('cat-drop');
+  const items=[];
+  function walk(pid,depth){
+    catNodes().filter(n=>String(n.parentId||'')===String(pid||'')).forEach(n=>{
+      items.push({id:n.id,name:n.name,depth});
+      walk(n.id,depth+1);
+    });
+  }
+  walk(null,0);
+  drop.innerHTML=items.map(it=>`
+    <div class="cd-item${String(addCatId)===String(it.id)?' selected':''}"
+      style="padding-left:${14+it.depth*14}px"
+      onclick="setAddCat('${it.id}');toggleCatDrop()">
+      <i class="ti ti-folder" style="font-size:11px"></i>
+      ${esc(it.name)}
+    </div>`).join('');
+}
+
+function toggleCatDrop(){
+  catDropOpen=!catDropOpen;
+  const drop=document.getElementById('cat-drop');
+  const btn=document.getElementById('cat-btn');
+  drop.style.display=catDropOpen?'block':'none';
+  btn.classList.toggle('open',catDropOpen);
+  if(catDropOpen) buildCatDrop();
+}
+
+function setAddCat(id){
+  addCatId=id;
+  const n=byId(id);
+  document.getElementById('cat-btn-label').textContent=n?n.name:'Категория';
+}
+
+document.addEventListener('click',e=>{
+  if(catDropOpen && !document.getElementById('cat-wrap').contains(e.target)){
+    catDropOpen=false;
+    document.getElementById('cat-drop').style.display='none';
+    document.getElementById('cat-btn').classList.remove('open');
+  }
+});
 
 // ── Pane ─────────────────────────────────────────────────────
-function renderPane() {
-  const n = selectedId ? byId(selectedId) : null;
-  document.getElementById('ph-title').textContent = n ? n.name : 'Все задачи';
-  document.getElementById('ph-path').textContent = n ? getPath(selectedId) : '';
-  renderTree();
+function renderPane(){
+  const n=selectedCatId?byId(selectedCatId):null;
+  document.getElementById('ph-title').textContent=n?n.name:'Все задачи';
+  document.getElementById('ph-path').textContent=n?getPath(selectedCatId):'';
+  renderTasks();
 }
 
-// Render tree in pane — shows children of selectedId (or all roots if null)
-function renderTree() {
-  const el = document.getElementById('tree-pane');
-  const rootNodes = selectedId ? children(selectedId) : roots();
-
-  // filter by doneFilter for task nodes
-  let html = '';
-  if(!rootNodes.length && selectedId) {
-    html = `<div class="empty-pane">Нет элементов<br><span style="font-size:11px;color:var(--mu2)">Добавьте подкатегорию или задачу выше</span></div>`;
-  } else if(!rootNodes.length) {
-    html = `<div class="empty-pane">Добавьте первую категорию</div>`;
+function renderTasks(){
+  // Get top-level tasks for current view (tasks whose parent is a category in scope)
+  let topTasks;
+  if(!selectedCatId){
+    // all tasks that are direct children of categories (not subtasks)
+    topTasks=taskNodes().filter(t=>!byId(t.parentId)||!byId(t.parentId).isTask);
   } else {
-    html = rootNodes.map(n => renderPaneNode(n, 0)).join('');
+    const ids=allDescIds(selectedCatId);
+    topTasks=taskNodes().filter(t=>{
+      const p=byId(t.parentId);
+      return ids.has(String(t.parentId)) && (!p||!p.isTask);
+    });
   }
-  el.innerHTML = html;
+
+  if(doneFilter==='active') topTasks=topTasks.filter(t=>!t.done);
+  if(doneFilter==='done')   topTasks=topTasks.filter(t=>t.done);
+
+  const el=document.getElementById('tasks-list');
+  if(!topTasks.length){
+    el.innerHTML='<div class="empty">Задач нет — добавьте первую!</div>';
+    return;
+  }
+  el.innerHTML=topTasks.map(t=>renderTaskGroup(t,0)).join('');
 }
 
-function renderPaneNode(n, depth) {
-  const id = String(n.id);
-  const ch = children(id);
-  const isOpen = expanded.has(id);
-  const hasChildren = ch.length > 0;
-  const indent = depth * 24;
+function renderTaskGroup(t,depth){
+  return `<div class="task-group">${renderTaskRow(t,depth)}${expandedTasks.has(String(t.id))?renderSubtasks(t.id,depth+1):''}</div>`;
+}
 
-  // for tasks: apply doneFilter
-  if(n.isTask && doneFilter === 'active' && n.done) return '';
-  if(n.isTask && doneFilter === 'done'   && !n.done) return '';
+function renderTaskRow(t,depth){
+  const subtasks=taskNodes().filter(s=>String(s.parentId)===String(t.id));
+  const cat=byId(t.parentId);
+  const catName=cat&&!cat.isTask?cat.name:'';
+  const timeBadge=(t.timeFrom||t.timeTo)?`<span class="time-pill"><i class="ti ti-clock" style="font-size:9px"></i>${t.timeFrom||''}${t.timeTo?' — '+t.timeTo:''}</span>`:'';
+  const dateBadge=t.date?`<span class="date-pill">${fmtDate(t.date)}</span>`:'';
+  const catBadge=catName&&depth===0?`<span class="cat-pill">${esc(catName)}</span>`:'';
+  const subCnt=subtasks.length?`<span class="subtask-cnt" onclick="toggleSubs('${t.id}')">▸ ${subtasks.length} подзадач</span>`:'';
+  const isExp=expandedTasks.has(String(t.id));
+  const indent=depth*28;
 
-  const timeBadge = (n.timeFrom||n.timeTo)
-    ? `<span class="nr-time"><i class="ti ti-clock" style="font-size:9px"></i>${n.timeFrom||''}${n.timeTo?' — '+n.timeTo:''}</span>` : '';
-  const dateBadge = n.date ? `<span class="nr-date">${fmtDate(n.date)}</span>` : '';
-
-  const inner = `<div class="nr${n.isTask&&n.done?' is-done':''}">
-    <div class="nr-indent" style="width:${indent}px;flex-shrink:0"></div>
-    <span class="nr-toggle${hasChildren?(isOpen?' open':''):' hidden'}"
-      onclick="event.stopPropagation();togglePaneExp('${id}')">▶</span>
-    ${n.isTask
-      ? `<div class="nr-check${n.done?' done':''}" onclick="toggleDone('${id}')"></div>`
-      : `<i class="ti ti-folder nr-folder"></i>`
-    }
-    <div class="nr-body">
-      <div class="nr-name" onclick="${n.isTask?`openEditModal('${id}')`:`selectNode('${id}')`}">${esc(n.name)}</div>
-      ${n.isTask ? `<div class="nr-meta">${dateBadge}${timeBadge}
-        <span class="nr-note-link" onclick="toggleNoteWrap('${id}')">${n.note?'📝 заметка':'+ заметка'}</span>
-      </div>` : ''}
+  return `<div class="task-row${t.done?' is-done':''}" id="tr-${t.id}">
+    <div class="task-indent" style="width:${indent}px;flex-shrink:0"></div>
+    <span class="task-expand${subtasks.length?(isExp?' open':''):' hidden'}" onclick="toggleSubs('${t.id}')">▶</span>
+    <div class="check${t.done?' done':''}" onclick="toggleDone('${t.id}')"></div>
+    <div class="task-body">
+      <div class="task-text" onclick="openEditModal('${t.id}')">${esc(t.name)}</div>
+      <div class="task-meta">
+        ${catBadge}${dateBadge}${timeBadge}${subCnt}
+        <span class="note-link" onclick="toggleNote('${t.id}')">${t.note?'📝':'+ заметка'}</span>
+      </div>
     </div>
-    <div class="nr-acts">
-      <button class="nab" onclick="openEditModal('${id}')" title="Редактировать"><i class="ti ti-pencil"></i></button>
-      <button class="nab" onclick="promptAdd('${id}',false)" title="Добавить подкатегорию"><i class="ti ti-folder-plus"></i></button>
-      <button class="nab" onclick="promptAdd('${id}',true)" title="Добавить задачу"><i class="ti ti-plus"></i></button>
-      <button class="nab danger" onclick="confirmDelete('${id}')" title="Удалить"><i class="ti ti-trash"></i></button>
+    <div class="task-acts">
+      <button class="tab add-sub" onclick="openAddSubtask('${t.id}')" title="Добавить подзадачу"><i class="ti ti-plus"></i> подзадача</button>
+      <button class="tab" onclick="openEditModal('${t.id}')" title="Редактировать"><i class="ti ti-pencil"></i></button>
+      <button class="tab danger" onclick="deleteTask('${t.id}')" title="Удалить"><i class="ti ti-trash"></i></button>
     </div>
   </div>
-  ${n.isTask ? `<div class="nr-note-wrap" id="nw-${id}">
-    <div class="nr-note-inner" style="padding-left:${indent+80}px">
-      <textarea placeholder="Заметка..." onchange="saveNote('${id}',this.value)" onblur="saveNote('${id}',this.value)">${esc(n.note||'')}</textarea>
+  <div class="note-wrap" id="nw-${t.id}">
+    <div class="note-inner" style="padding-left:${indent+70}px">
+      <textarea placeholder="Заметка..." onchange="saveNote('${t.id}',this.value)" onblur="saveNote('${t.id}',this.value)">${esc(t.note||'')}</textarea>
     </div>
-  </div>` : ''}`;
-
-  const childHtml = (isOpen || !n.isTask) && hasChildren
-    ? ch.map(c => renderPaneNode(c, depth+1)).join('') : '';
-
-  return `<div class="tn">${inner}${childHtml}</div>`;
+  </div>`;
 }
 
-function togglePaneExp(id) {
-  expanded.has(id) ? expanded.delete(id) : expanded.add(id);
-  renderTree();
+function renderSubtasks(parentId,depth){
+  const subs=taskNodes().filter(s=>String(s.parentId)===String(parentId));
+  if(!subs.length)return'';
+  return subs.map(s=>`<div class="task-group">${renderTaskRow(s,depth)}${expandedTasks.has(String(s.id))?renderSubtasks(s.id,depth+1):''}</div>`).join('');
 }
 
-function setDF(f, btn) {
-  doneFilter = f;
+function toggleSubs(id){
+  expandedTasks.has(id)?expandedTasks.delete(id):expandedTasks.add(id);
+  renderTasks();
+}
+
+function setDF(f,btn){
+  doneFilter=f;
   document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderTree();
+  renderTasks();
+}
+
+// ── Add task ─────────────────────────────────────────────────
+async function addTask(){
+  const inp=document.getElementById('add-inp');
+  const name=inp.value.trim();
+  if(!name)return;
+  if(!addCatId){alert('Выберите категорию');return;}
+  const btn=document.getElementById('add-btn');
+  btn.disabled=true;
+  const node={
+    id:String(Date.now()),
+    parentId:addCatId,
+    name, isTask:true, done:false, note:'',
+    date:document.getElementById('add-date').value||todayStr(),
+    timeFrom:document.getElementById('add-tf').value||'',
+    timeTo:document.getElementById('add-tt').value||'',
+    priority:'normal', order:nodes.length,
+    createdAt:new Date().toISOString()
+  };
+  nodes.push(node);
+  inp.value='';
+  document.getElementById('add-tf').value='';
+  document.getElementById('add-tt').value='';
+  refresh();
+  setStatus('load','сохранение...');
+  try{await apiPost({action:'addNode',...node});setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));}
+  catch(e){setStatus('err','ошибка');}
+  btn.disabled=false;
+}
+
+// ── Add subtask ───────────────────────────────────────────────
+function openAddSubtask(parentTaskId){
+  const parent=byId(parentTaskId);
+  openModal({
+    title:'Новая подзадача'+(parent?` → ${parent.name}`:''),
+    node:{name:'',date:todayStr(),timeFrom:'',timeTo:'',note:''},
+    okLabel:'Создать',
+    onOk:async(data)=>{
+      const node={
+        id:String(Date.now()),
+        parentId:parentTaskId,
+        name:data.name, isTask:true, done:false,
+        note:data.note||'',
+        date:data.date||todayStr(),
+        timeFrom:data.timeFrom||'',
+        timeTo:data.timeTo||'',
+        priority:'normal', order:nodes.length,
+        createdAt:new Date().toISOString()
+      };
+      nodes.push(node);
+      expandedTasks.add(String(parentTaskId));
+      refresh();
+      setStatus('load','сохранение...');
+      try{await apiPost({action:'addNode',...node});setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));}
+      catch(e){setStatus('err','ошибка');}
+    }
+  });
 }
 
 // ── Toggle done ───────────────────────────────────────────────
-async function toggleDone(id) {
-  const n = byId(id);
-  if(!n) return;
-  n.done = !n.done;
-  refresh();
-  try {
-    await apiPost({ action:'updateNode', ...n });
-    setStatus('ok', 'сохранено · ' + new Date().toLocaleTimeString('ru'));
-  } catch(e) { setStatus('err','ошибка'); }
+async function toggleDone(id){
+  const n=byId(id); if(!n)return;
+  n.done=!n.done; refresh();
+  try{await apiPost({action:'updateNode',...n});setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));}
+  catch(e){setStatus('err','ошибка');}
 }
 
 // ── Note ─────────────────────────────────────────────────────
-function toggleNoteWrap(id) {
-  const el = document.getElementById('nw-'+id);
-  if(el) { el.classList.toggle('open'); if(el.classList.contains('open')) el.querySelector('textarea').focus(); }
+function toggleNote(id){
+  const el=document.getElementById('nw-'+id);
+  if(el){el.classList.toggle('open');if(el.classList.contains('open'))el.querySelector('textarea').focus();}
 }
-async function saveNote(id, val) {
-  const n = byId(id);
-  if(!n) return;
-  n.note = val;
-  try { await apiPost({ action:'updateNode', ...n }); } catch(e) {}
-}
-
-// ── Quick add ─────────────────────────────────────────────────
-function setAddType(t) {
-  addType = t;
-  document.getElementById('type-cat').classList.toggle('active', t==='cat');
-  document.getElementById('type-task').classList.toggle('active', t==='task');
-}
-
-async function quickAdd() {
-  const inp = document.getElementById('qadd-inp');
-  const name = inp.value.trim();
-  if(!name) return;
-  const btn = document.getElementById('qadd-btn');
-  btn.disabled = true;
-
-  const node = {
-    id: String(Date.now()),
-    parentId: selectedId || null,
-    name,
-    isTask: addType === 'task',
-    done: false, note: '',
-    date: addType==='task' ? todayStr() : '',
-    timeFrom:'', timeTo:'',
-    priority:'normal', order: nodes.length,
-    createdAt: new Date().toISOString()
-  };
-  nodes.push(node);
-  inp.value = '';
-  if(selectedId) expanded.add(String(selectedId));
-  refresh();
-
-  setStatus('load','сохранение...');
-  try {
-    await apiPost({ action:'addNode', ...node });
-    setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));
-  } catch(e) { setStatus('err','ошибка'); }
-  btn.disabled = false;
-}
-
-// ── Add via modal ─────────────────────────────────────────────
-function promptAdd(parentId, asTask) {
-  openModal({
-    title: asTask ? 'Новая задача' : 'Новая категория',
-    isTask: asTask,
-    okLabel: 'Создать',
-    node: { parentId, isTask: asTask, done:false, note:'', date: asTask?todayStr():'', timeFrom:'', timeTo:'' },
-    onOk: async (data) => {
-      const node = {
-        id: String(Date.now()),
-        parentId: parentId || null,
-        name: data.name,
-        isTask: asTask,
-        done: false,
-        note: data.note || '',
-        date: data.date || '',
-        timeFrom: data.timeFrom || '',
-        timeTo: data.timeTo || '',
-        priority: 'normal',
-        order: nodes.length,
-        createdAt: new Date().toISOString()
-      };
-      nodes.push(node);
-      if(parentId) expanded.add(String(parentId));
-      refresh();
-      setStatus('load','сохранение...');
-      try {
-        await apiPost({ action:'addNode', ...node });
-        setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));
-      } catch(e) { setStatus('err','ошибка'); }
-    }
-  });
+async function saveNote(id,val){
+  const n=byId(id); if(!n)return;
+  n.note=val;
+  try{await apiPost({action:'updateNode',...n});}catch(e){}
 }
 
 // ── Edit modal ────────────────────────────────────────────────
-function openEditModal(id) {
-  const n = byId(id);
-  if(!n) return;
+function openEditModal(id){
+  const n=byId(id); if(!n)return;
   openModal({
-    title: 'Редактировать',
-    isTask: n.isTask,
-    okLabel: 'Сохранить',
-    node: n,
-    onOk: async (data) => {
-      n.name = data.name;
-      n.note = data.note || '';
-      n.date = data.date || '';
-      n.timeFrom = data.timeFrom || '';
-      n.timeTo = data.timeTo || '';
+    title:'Редактировать задачу',
+    node:n, okLabel:'Сохранить',
+    onOk:async(data)=>{
+      n.name=data.name; n.date=data.date; n.timeFrom=data.timeFrom; n.timeTo=data.timeTo; n.note=data.note;
       refresh();
       setStatus('load','сохранение...');
-      try {
-        await apiPost({ action:'updateNode', ...n });
-        setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));
-      } catch(e) { setStatus('err','ошибка'); }
+      try{await apiPost({action:'updateNode',...n});setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));}
+      catch(e){setStatus('err','ошибка');}
     }
   });
 }
 
-// ── Generic modal ─────────────────────────────────────────────
-function openModal({ title, isTask, okLabel, node, onOk }) {
-  document.getElementById('mdl-title').textContent = title;
-  document.getElementById('mdl-ok').textContent = okLabel;
-  document.getElementById('mdl-name').value = node.name || '';
-  document.getElementById('mdl-date').value = node.date || todayStr();
-  document.getElementById('mdl-tf').value = node.timeFrom || '';
-  document.getElementById('mdl-tt').value = node.timeTo || '';
-  document.getElementById('mdl-note').value = node.note || '';
-  document.getElementById('mdl-task-fields').style.display = isTask ? '' : 'none';
-  document.getElementById('modal').style.display = 'flex';
-  setTimeout(() => document.getElementById('mdl-name').focus(), 40);
-  modalCb = onOk;
+function openModal({title,node,okLabel,onOk}){
+  document.getElementById('mdl-title').textContent=title;
+  document.getElementById('mdl-ok').textContent=okLabel;
+  document.getElementById('mdl-name').value=node.name||'';
+  document.getElementById('mdl-date').value=node.date||todayStr();
+  document.getElementById('mdl-tf').value=node.timeFrom||'';
+  document.getElementById('mdl-tt').value=node.timeTo||'';
+  document.getElementById('mdl-note').value=node.note||'';
+  document.getElementById('modal').style.display='flex';
+  setTimeout(()=>document.getElementById('mdl-name').focus(),40);
+  modalCb=onOk;
 }
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-  modalCb = null;
-}
-
-function confirmModal() {
-  const name = document.getElementById('mdl-name').value.trim();
-  if(!name) { document.getElementById('mdl-name').focus(); return; }
-  const data = {
-    name,
-    date: document.getElementById('mdl-date').value,
-    timeFrom: document.getElementById('mdl-tf').value,
-    timeTo: document.getElementById('mdl-tt').value,
-    note: document.getElementById('mdl-note').value,
-  };
+function closeModal(){ document.getElementById('modal').style.display='none'; modalCb=null; }
+function confirmModal(){
+  const name=document.getElementById('mdl-name').value.trim();
+  if(!name){document.getElementById('mdl-name').focus();return;}
+  const data={name,date:document.getElementById('mdl-date').value,timeFrom:document.getElementById('mdl-tf').value,timeTo:document.getElementById('mdl-tt').value,note:document.getElementById('mdl-note').value};
   closeModal();
-  if(modalCb) { modalCb(data); modalCb = null; }
+  if(modalCb){modalCb(data);modalCb=null;}
+}
+document.getElementById('mdl-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
+
+// ── Delete task ───────────────────────────────────────────────
+async function deleteTask(id){
+  const n=byId(id); if(!n)return;
+  const descIds=allDescIds(id);
+  const childCount=descIds.size-1;
+  if(!confirm(`Удалить "${n.name}"?${childCount?`\n\nВместе с ней будет удалено ${childCount} подзадач.`:''}`))return;
+  nodes=nodes.filter(n=>!descIds.has(String(n.id)));
+  refresh();
+  try{await apiPost({action:'deleteNode',id});setStatus('ok','удалено');}
+  catch(e){setStatus('err','ошибка');}
 }
 
-document.getElementById('mdl-name').addEventListener('keydown', e => { if(e.key==='Enter') confirmModal(); if(e.key==='Escape') closeModal(); });
+// ── Category modal ────────────────────────────────────────────
+let catModalParentId=null;
+function openCatModal(parentId){
+  catModalParentId=parentId;
+  const parent=parentId?byId(parentId):null;
+  document.getElementById('cat-mdl-title').textContent=parent?`Подкатегория в "${parent.name}"`:'Новая категория';
+  document.getElementById('cat-mdl-name').value='';
+  document.getElementById('cat-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('cat-mdl-name').focus(),40);
+}
+function closeCatModal(){ document.getElementById('cat-modal').style.display='none'; }
+async function confirmCatModal(){
+  const name=document.getElementById('cat-mdl-name').value.trim();
+  if(!name){document.getElementById('cat-mdl-name').focus();return;}
+  closeCatModal();
+  const node={id:String(Date.now()),parentId:catModalParentId||null,name,isTask:false,done:false,note:'',date:'',timeFrom:'',timeTo:'',priority:'normal',order:nodes.length,createdAt:new Date().toISOString()};
+  nodes.push(node);
+  if(catModalParentId) expanded.add(String(catModalParentId));
+  refresh(); buildCatDrop();
+  try{await apiPost({action:'addNode',...node});setStatus('ok','категория создана');}
+  catch(e){setStatus('err','ошибка');}
+}
+document.getElementById('cat-mdl-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmCatModal();if(e.key==='Escape')closeCatModal();});
 
-// ── Delete ────────────────────────────────────────────────────
-async function confirmDelete(id) {
-  const n = byId(id);
-  if(!n) return;
-  const descIds = allDescIds(id);
-  const childCount = descIds.size - 1;
-  const msg = `Удалить "${n.name}"?${childCount ? `\n\nВместе с ним будет удалено ещё ${childCount} вложенных элементов.` : ''}`;
-  if(!confirm(msg)) return;
-  nodes = nodes.filter(n => !descIds.has(String(n.id)));
-  if(String(selectedId) === String(id)) selectedId = null;
-  refresh();
-  try {
-    await apiPost({ action:'deleteNode', id });
-    setStatus('ok','удалено · '+new Date().toLocaleTimeString('ru'));
-  } catch(e) { setStatus('err','ошибка'); }
+// ── Delete category ───────────────────────────────────────────
+async function deleteCat(id){
+  const n=byId(id); if(!n)return;
+  const descIds=allDescIds(id);
+  if(!confirm(`Удалить категорию "${n.name}" и всё внутри?`))return;
+  nodes=nodes.filter(n=>!descIds.has(String(n.id)));
+  if(String(selectedCatId)===String(id)) selectedCatId=null;
+  refresh(); buildCatDrop();
+  try{await apiPost({action:'deleteNode',id});setStatus('ok','удалено');}
+  catch(e){setStatus('err','ошибка');}
 }
 
 // ── Refresh ───────────────────────────────────────────────────
-function refresh() {
-  const allTasks = nodes.filter(n => n.isTask);
-  const done = allTasks.filter(n => n.done).length;
-  const total = allTasks.length;
-  document.getElementById('s-total').textContent = total;
-  document.getElementById('s-done').textContent = done;
-  document.getElementById('prog').style.width = (total ? Math.round(done/total*100) : 0) + '%';
+function refresh(){
+  const all=taskNodes(), done=all.filter(t=>t.done).length;
+  document.getElementById('s-total').textContent=all.length;
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('prog').style.width=(all.length?Math.round(done/all.length*100):0)+'%';
   renderSidebar();
   renderPane();
 }
 
-// ── Init ──────────────────────────────────────────────────────
-document.getElementById('qadd-inp').addEventListener('keydown', e => { if(e.key==='Enter') quickAdd(); });
+// ── Init ─────────────────────────────────────────────────────
+document.getElementById('add-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
+document.getElementById('add-date').value=todayStr();
 loadAll();
 </script>
 </body>
