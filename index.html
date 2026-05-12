@@ -296,7 +296,7 @@ async function loadAll(){
   setStatus('load','загрузка...');
   try{
     const r = await fetch(BIN_URL+'/latest', {
-      headers: { 'X-Master-Key': API_KEY }
+      headers: { 'X-Master-Key': API_KEY, 'X-Bin-Private': 'false' }
     });
     const data = await r.json();
     nodes = (data.record.nodes || []).map(n=>({
@@ -314,7 +314,7 @@ async function saveAll(){
   try{
     await fetch(BIN_URL, {
       method:'PUT',
-      headers:{ 'Content-Type':'application/json', 'X-Master-Key': API_KEY },
+      headers:{ 'Content-Type':'application/json', 'X-Master-Key': API_KEY, 'X-Bin-Private': 'false' },
       body: JSON.stringify({ nodes })
     });
     setStatus('ok','сохранено · '+new Date().toLocaleTimeString('ru'));
@@ -593,7 +593,7 @@ function confirmModal(){
     timeFrom:document.getElementById('mdl-tf').value,
     timeTo:document.getElementById('mdl-tt').value,
     note:document.getElementById('mdl-note').value};
-  closeModal();if(modalCb){modalCb(data);modalCb=null;}
+  const cb=modalCb;closeModal();if(cb)cb(data);
 }
 document.getElementById('mdl-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
 
