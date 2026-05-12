@@ -259,6 +259,7 @@ let doneFilter = 'all';
 let expanded = new Set();
 let addCatId = null;
 let modalCb = null;
+let modalCbStore = {};
 let expandedTasks = new Set();
 let catDropOpen = false;
 let saveTimer = null;
@@ -583,9 +584,9 @@ function openModal({title,node,okLabel,onOk}){
   document.getElementById('mdl-note').value=node.note||'';
   document.getElementById('modal').style.display='flex';
   setTimeout(()=>document.getElementById('mdl-name').focus(),40);
-  modalCb=onOk;
+  window._taskModalCb=onOk;
 }
-function closeModal(){document.getElementById('modal').style.display='none';modalCb=null;}
+function closeModal(){document.getElementById('modal').style.display='none';window._taskModalCb=null;}
 function confirmModal(){
   const name=document.getElementById('mdl-name').value.trim();
   if(!name){document.getElementById('mdl-name').focus();return;}
@@ -593,7 +594,9 @@ function confirmModal(){
     timeFrom:document.getElementById('mdl-tf').value,
     timeTo:document.getElementById('mdl-tt').value,
     note:document.getElementById('mdl-note').value};
-  const cb=modalCb;closeModal();if(cb)cb(data);
+  const cb=window._taskModalCb;
+  closeModal();
+  if(cb) cb(data);
 }
 document.getElementById('mdl-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
 
