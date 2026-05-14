@@ -62,6 +62,24 @@ body{display:flex;flex-direction:column}
 .fbtns{display:flex;gap:4px}
 .fb{background:none;border:1px solid var(--bd);border-radius:20px;padding:3px 12px;color:var(--mu);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
 .fb.active{background:var(--acc);color:#000;border-color:var(--acc);font-weight:600}
+
+/* ── Filter bar ── */
+.filter-bar{padding:10px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.filter-chip-group{display:flex;align-items:center;gap:2px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:3px}
+.filter-chip{background:none;border:none;border-radius:5px;padding:4px 11px;color:var(--mu);font-family:'Syne',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap;line-height:1.4}
+.filter-chip:hover{color:var(--tx);background:rgba(255,255,255,.05)}
+.filter-chip.active{background:var(--s3);color:var(--tx);font-weight:600}
+.filter-chip.active-acc{background:rgba(200,245,66,.15);color:var(--acc);font-weight:600}
+.filter-sep{width:1px;height:22px;background:var(--bd);flex-shrink:0}
+.sort-wrap{position:relative}
+.sort-btn{display:flex;align-items:center;gap:5px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:6px 11px;color:var(--mu);font-family:'Syne',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.sort-btn:hover,.sort-btn.open{border-color:var(--bd2);color:var(--tx)}
+.sort-btn.active-sort{border-color:rgba(200,245,66,.25);color:var(--acc)}
+.sort-dropdown{position:absolute;top:calc(100% + 4px);right:0;background:var(--s2);border:1px solid var(--bd2);border-radius:10px;z-index:50;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);min-width:190px}
+.sort-item{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:12px;color:var(--mu);transition:background .1s}
+.sort-item:hover{background:var(--s3);color:var(--tx)}
+.sort-item.selected{color:var(--acc)}
+.sort-icon{font-size:13px;width:16px;text-align:center}
 .add-form{padding:12px 24px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
 .add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .add-inp{flex:1;min-width:160px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;color:var(--tx);font-family:'Syne',sans-serif;font-size:14px;outline:none}
@@ -179,10 +197,37 @@ textarea:focus{border-color:var(--bd2);color:var(--tx)}
           <div class="ph-title" id="ph-title">Все задачи</div>
           <div class="ph-path" id="ph-path"></div>
         </div>
-        <div class="fbtns">
-          <button class="fb active" onclick="setDF('all',this)">Все</button>
-          <button class="fb" onclick="setDF('active',this)">Активные</button>
-          <button class="fb" onclick="setDF('done',this)">Готово</button>
+
+      </div>
+      <div class="filter-bar" id="filter-bar">
+        <!-- Статус -->
+        <div class="filter-chip-group">
+          <button class="filter-chip active-acc" id="fc-active" onclick="setFDone('active')">Активные</button>
+          <button class="filter-chip" id="fc-all" onclick="setFDone('all')">Все</button>
+          <button class="filter-chip" id="fc-done" onclick="setFDone('done')">Готово</button>
+        </div>
+        <div class="filter-sep"></div>
+        <!-- Дата -->
+        <div class="filter-chip-group">
+          <button class="filter-chip" id="fd-all" onclick="setFDate('all')">Все даты</button>
+          <button class="filter-chip" id="fd-today" onclick="setFDate('today')">Сегодня</button>
+          <button class="filter-chip" id="fd-week" onclick="setFDate('week')">Неделя</button>
+          <button class="filter-chip" id="fd-nodate" onclick="setFDate('nodate')">Без даты</button>
+        </div>
+        <div class="filter-sep"></div>
+        <!-- Сортировка -->
+        <div class="sort-wrap">
+          <button class="sort-btn active-sort" id="sort-btn" onclick="toggleSortDrop()">
+            <i class="ti ti-arrows-sort" style="font-size:12px"></i>
+            <span id="sort-label">Дата ↑</span>
+            <i class="ti ti-chevron-down" style="font-size:10px"></i>
+          </button>
+          <div class="sort-dropdown" id="sort-drop" style="display:none">
+            <div class="sort-item selected" id="si-date-asc" onclick="setSort('date-asc')"><i class="ti ti-sort-ascending sort-icon"></i>Дата ↑ (ранние)</div>
+            <div class="sort-item" id="si-date-desc" onclick="setSort('date-desc')"><i class="ti ti-sort-descending sort-icon"></i>Дата ↓ (поздние)</div>
+            <div class="sort-item" id="si-created" onclick="setSort('created')"><i class="ti ti-clock sort-icon"></i>По созданию</div>
+            <div class="sort-item" id="si-alpha" onclick="setSort('alpha')"><i class="ti ti-abc sort-icon"></i>По алфавиту</div>
+          </div>
         </div>
       </div>
       <div class="add-form">
@@ -255,7 +300,7 @@ const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 let nodes = [];
 let selectedCatId = null;
-let doneFilter = 'all';
+let doneFilter = 'active';
 let expanded = new Set();
 let addCatId = null;
 let modalCb = null;
@@ -445,6 +490,66 @@ function renderPane(){
   renderTasks();
 }
 
+
+// ── Filter & Sort state ──────────────────────────────────────
+let fDoneVal = 'active';
+let fDateVal = 'all';
+let fSortVal = 'date-asc';
+let sortDropOpen = false;
+
+const SORT_LABELS = {'date-asc':'Дата ↑','date-desc':'Дата ↓','created':'По созданию','alpha':'По алфавиту'};
+
+function setFDone(val){
+  fDoneVal=val;
+  ['active','all','done'].forEach(v=>{
+    const el=document.getElementById('fc-'+v);
+    if(el) el.className='filter-chip'+(v===val?(val==='active'?' active-acc':' active'):'');
+  });
+  renderTasks();
+}
+
+function setFDate(val){
+  fDateVal=val;
+  ['all','today','week','nodate'].forEach(v=>{
+    const el=document.getElementById('fd-'+v);
+    if(el) el.className='filter-chip'+(v===val?' active':'');
+  });
+  renderTasks();
+}
+
+function setSort(val){
+  fSortVal=val;
+  document.getElementById('sort-label').textContent=SORT_LABELS[val];
+  document.querySelectorAll('.sort-item').forEach(el=>el.classList.remove('selected'));
+  const si=document.getElementById('si-'+val);
+  if(si) si.classList.add('selected');
+  closeSortDrop();
+  renderTasks();
+}
+
+function toggleSortDrop(){
+  sortDropOpen=!sortDropOpen;
+  const drop=document.getElementById('sort-drop');
+  const btn=document.getElementById('sort-btn');
+  if(drop) drop.style.display=sortDropOpen?'block':'none';
+  if(btn) btn.classList.toggle('open',sortDropOpen);
+}
+function closeSortDrop(){
+  sortDropOpen=false;
+  const drop=document.getElementById('sort-drop');
+  const btn=document.getElementById('sort-btn');
+  if(drop) drop.style.display='none';
+  if(btn) btn.classList.remove('open');
+}
+
+document.addEventListener('click',e=>{
+  if(sortDropOpen&&document.getElementById('sort-drop')&&!document.getElementById('sort-wrap')?.contains(e.target)&&!document.querySelector('.sort-wrap')?.contains(e.target)){
+    closeSortDrop();
+  }
+});
+
+function applyFilters(){ renderTasks(); }
+
 function renderTasks(){
   let topTasks;
   if(!selectedCatId){
@@ -453,10 +558,43 @@ function renderTasks(){
     const ids=allDescIds(selectedCatId);
     topTasks=taskNodes().filter(t=>{ const p=byId(t.parentId); return ids.has(String(t.parentId))&&(!p||!p.isTask); });
   }
-  if(doneFilter==='active') topTasks=topTasks.filter(t=>!t.done);
-  if(doneFilter==='done')   topTasks=topTasks.filter(t=>t.done);
+
+  // Done filter
+  if(fDoneVal==='active') topTasks=topTasks.filter(t=>!t.done);
+  else if(fDoneVal==='done') topTasks=topTasks.filter(t=>t.done);
+
+  // Date filter
+  const today = todayStr();
+  const weekEnd = new Date(); weekEnd.setDate(weekEnd.getDate()+7);
+  const weekEndStr = weekEnd.toISOString().slice(0,10);
+  if(fDateVal==='today') topTasks=topTasks.filter(t=>t.date===today);
+  else if(fDateVal==='week') topTasks=topTasks.filter(t=>t.date&&t.date>=today&&t.date<=weekEndStr);
+  else if(fDateVal==='nodate') topTasks=topTasks.filter(t=>!t.date);
+
+  // Sort
+  topTasks.sort((a,b)=>{
+    if(fSortVal==='date-asc'){
+      if(!a.date&&!b.date) return 0;
+      if(!a.date) return 1;
+      if(!b.date) return -1;
+      return a.date.localeCompare(b.date);
+    } else if(fSortVal==='date-desc'){
+      if(!a.date&&!b.date) return 0;
+      if(!a.date) return 1;
+      if(!b.date) return -1;
+      return b.date.localeCompare(a.date);
+    } else if(fSortVal==='alpha'){
+      return a.name.localeCompare(b.name,'ru');
+    } else {
+      return (a.createdAt||'').localeCompare(b.createdAt||'');
+    }
+  });
+
   const el=document.getElementById('tasks-list');
-  if(!topTasks.length){el.innerHTML='<div class="empty">Задач нет — добавьте первую!</div>';return;}
+  if(!topTasks.length){
+    el.innerHTML='<div class="empty">Задач не найдено<br><span style="font-size:11px;color:var(--mu2)">Попробуйте изменить фильтры</span></div>';
+    return;
+  }
   el.innerHTML=topTasks.map(t=>renderTaskGroup(t,0)).join('');
 }
 
@@ -505,7 +643,7 @@ function renderSubtasks(parentId,depth){
 }
 
 function toggleSubs(id){ expandedTasks.has(id)?expandedTasks.delete(id):expandedTasks.add(id); renderTasks(); }
-function setDF(f,btn){ doneFilter=f; document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderTasks(); }
+function setDF(f,btn){ doneFilter=f; renderTasks(); }
 
 // ── Add task ─────────────────────────────────────────────────
 async function addTask(){
@@ -654,7 +792,7 @@ function refresh(){
 
 // ── Init ─────────────────────────────────────────────────────
 document.getElementById('add-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
-document.getElementById('add-date').value=todayStr();
+// no default date
 loadAll();
 </script>
 </body>
